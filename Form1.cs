@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MNIST_neuralnetwork
@@ -18,19 +13,32 @@ namespace MNIST_neuralnetwork
             InitializeComponent();
         }
 
-        private void splitContainer2_Panel2_Paint(object sender, PaintEventArgs e)
-        {
 
-        }
+        List<Bitmap> images = new List<Bitmap>();
+
 
         private void DownloadButton_Click(object sender, EventArgs e)
         {
-            Random rand = new Random();
+            //Random rand = new Random();
             string path = $"{Environment.CurrentDirectory}\\mnist_jpeg\\training\\";
-            string filename = rand.Next(0, 59999).ToString();
-            string full_path = path + filename + ".jpeg";
-            pictureBox1.Image = new Bitmap(full_path);
-            PictureNumber.Text = "№" + filename;
+            string[] files_paths = Directory.GetFiles(path);
+
+            //foreach (string fileName in files_paths)
+            //{
+
+            //    Bitmap image = new Bitmap(fileName);
+            //    images.Add(image);
+            //}
+            for(int i=0;i<3;i++)
+            {
+                Bitmap image = new Bitmap(files_paths[i]);
+                images.Add(image);
+            }
+            //string filename = rand.Next(0, 59999).ToString();
+            //string full_path = path + filename + "" +".jpeg";
+            pictureBox1.Image = images[0];
+           // string path_name[]= images[0].ToString().Split();
+            PictureNumber.Text = images[0].ToString();
             DownloadButton.Enabled = false;
 
         }

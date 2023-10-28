@@ -81,7 +81,6 @@
             this.splitContainer2.Panel2.Controls.Add(this.PictureNumber);
             this.splitContainer2.Panel2.Controls.Add(this.NextButton);
             this.splitContainer2.Panel2.Controls.Add(this.pictureBox1);
-            this.splitContainer2.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer2_Panel2_Paint);
             this.splitContainer2.Size = new System.Drawing.Size(376, 450);
             this.splitContainer2.SplitterDistance = 90;
             this.splitContainer2.TabIndex = 0;
@@ -143,6 +142,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Text = "Form1";
+            
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
