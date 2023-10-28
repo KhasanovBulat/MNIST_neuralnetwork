@@ -31,6 +31,7 @@ namespace MNIST_neuralnetwork
             string full_path = path + filename + ".jpeg";
             pictureBox1.Image = new Bitmap(full_path);
             PictureNumber.Text = "№" + filename;
+            DownloadButton.Enabled = false;
 
         }
 
