@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNIST_neuralnetwork", "MNIST_neuralnetwork.csproj", "{1066D313-F9FD-4F16-871E-ECCAC65F5374}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNISTDatabase", "..\MNISTDatabase\MNISTDatabase.csproj", "{32A5453E-353E-45C2-B0DA-2B303406A66E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{1066D313-F9FD-4F16-871E-ECCAC65F5374}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1066D313-F9FD-4F16-871E-ECCAC65F5374}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1066D313-F9FD-4F16-871E-ECCAC65F5374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32A5453E-353E-45C2-B0DA-2B303406A66E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32A5453E-353E-45C2-B0DA-2B303406A66E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32A5453E-353E-45C2-B0DA-2B303406A66E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32A5453E-353E-45C2-B0DA-2B303406A66E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
