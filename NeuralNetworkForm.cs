@@ -43,7 +43,7 @@ namespace MNIST_neuralnetwork
 
         }
 
-        
+
 
         private void DownlButton_Click(object sender, EventArgs e)
         {
@@ -51,13 +51,12 @@ namespace MNIST_neuralnetwork
             string path = $"{Environment.CurrentDirectory}\\mnist_jpeg\\training\\";
             string[] files_paths = Directory.GetFiles(path);
 
-           
             for (int i = 0; i < 20; i++)
             {
                 Bitmap image = new Bitmap(files_paths[i]);
                 images.Add(image);
             }
-            
+
             MNIST_PictureBox.Image = images[0];
             DigitTypeLabel.Text = "0";
             DownlButton.Enabled = false;
@@ -65,10 +64,10 @@ namespace MNIST_neuralnetwork
 
         private void NextButton_Click(object sender, EventArgs e)
         {
-            Random rand = new Random();   
+            Random rand = new Random();
             int currentIndex = rand.Next(images.Count);
-                MNIST_PictureBox.Image = images[4];
-                DigitTypeLabel.Text = currentIndex.ToString(); // номер изображения в List<Bitmap>
+            MNIST_PictureBox.Image = images[currentIndex];
+            DigitTypeLabel.Text = currentIndex.ToString(); // номер изображения в List<Bitmap>
         }
     }
 }
