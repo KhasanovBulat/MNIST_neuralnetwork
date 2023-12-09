@@ -15,6 +15,7 @@ namespace MNIST_neuralnetwork
 
 
         List<Bitmap> images = new List<Bitmap>();
+        Random rand = new Random();
        // public int currentIndex = 1;
 
         private void DownloadButton_Click(object sender, EventArgs e)
