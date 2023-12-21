@@ -50,7 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DigitImage.cs" />
     <Compile Include="KohonenNetwork.cs" />
+    <Compile Include="MNIST.cs" />
     <Compile Include="NeuralNetworkForm.cs">
       <SubType>Form</SubType>
     </Compile>

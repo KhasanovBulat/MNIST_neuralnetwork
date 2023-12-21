@@ -10,7 +10,7 @@ namespace MNIST_neuralnetwork
     public class KohonenNetwork
     {
         Neuron neuron;
-        private List<Neuron> neurons;
+        public List<Neuron> neurons;
 
 
         public double EuclideDistance(Neuron neuron, double[] input_vector)
@@ -24,7 +24,7 @@ namespace MNIST_neuralnetwork
         }
 
        // преобразование изображения во входный вектор...
-       private List<double[]> ImagesToVectors(List<Bitmap> MNIST_dataset)
+       public List<double[]> ImagesToVectors(List<Bitmap> MNIST_dataset)
         {
             List<double[]> vectors = new List<double[]>(); //лист с векторами (пикселями) каждой картинки-цифры
             int width = 28;
@@ -54,10 +54,11 @@ namespace MNIST_neuralnetwork
 
         
 
-        public void Train(List<double[]> inputVectors, int maxIterations, double decayRate, double min_h, double h)
+        public void Train(List<double[]> inputVectors, double decayRate, double min_h, double h)
         {
             int vectorSize = inputVectors[0].Length;
-             //инициализация весов
+            //инициализация весов
+
             foreach (Neuron neuron in neurons)
             {
                 neuron.Weights = new double[vectorSize];
@@ -101,7 +102,16 @@ namespace MNIST_neuralnetwork
             } while (h > min_h);
         }
 
-
+        public List<double[]> GetClusterCenters()
+        {
+            // Возвращаем список НОВЫХ весов как центры кластеров
+            List<double[]> clusterCenters = new List<double[]>();
+            foreach (var neuron in neurons)
+            {
+                clusterCenters.Add(neuron.Weights);
+            }
+            return clusterCenters;
+        }
 
     }
 
