@@ -9,7 +9,7 @@ namespace MNIST_neuralnetwork
 {
     public class KohonenNetwork
     {
-        Neuron neuron;
+        //Neuron neuron;
         public List<Neuron> neurons;
 
 

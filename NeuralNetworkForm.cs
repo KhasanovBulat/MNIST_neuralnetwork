@@ -14,6 +14,7 @@ namespace MNIST_neuralnetwork
         Random rand = new Random();
         public int currentIndex = 1;
         public KohonenNetwork kohonenNet;
+        MNIST mnist_train = new MNIST(20, 10000, 784);
         public NeuralNetworkForm()
         {
             InitializeComponent();
@@ -23,45 +24,19 @@ namespace MNIST_neuralnetwork
 
 
 
-        private void DownloadButton_Click(object sender, EventArgs e)
-        {
-            //// //Random rand = new Random();
-            //// string path = $"{Environment.CurrentDirectory}\\mnist_jpeg\\training\\";
-            //// string[] files_paths = Directory.GetFiles(path);
-
-            //// //foreach (string fileName in files_paths)
-            //// //{
-
-            //// //    Bitmap image = new Bitmap(fileName);
-            //// //    images.Add(image);
-            //// //}
-            //// for(int i=0;i<3;i++)
-            //// {
-            ////     Bitmap image = new Bitmap(files_paths[i]);
-            ////     images.Add(image);
-            //// }
-            //// //string filename = rand.Next(0, 59999).ToString();
-            //// //string full_path = path + filename + "" +".jpeg";
-            //// pictureBox1.Image = images[0];
-            ////// string path_name[]= images[0].ToString().Split();
-            //// PictureNumber.Text = images[0].ToString();
-            //// DownloadButton.Enabled = false;
-
-        }
+       
 
 
 
         private void DownlButton_Click(object sender, EventArgs e)
         {
             int[,] temp = new int[20, 784]; // Создаем массив для хранения пикселей всех изображений
-            MNIST mnistDB = new MNIST(20, 10000, 784);
-            images = mnistDB.LoadData(20, mnistDB.PixelFile, mnistDB.LabelFile, temp);
+            images = mnist_train.LoadData(20, mnist_train.PixelFile, mnist_train.LabelFile, temp);
             Bitmap_images = new Bitmap[images.Length];
             for (int i = 0; i < images.Length; i++)
             {
-                Bitmap_images[i] = mnistDB.MakeBitmap(images[i], 2);
+                Bitmap_images[i] = mnist_train.MakeBitmap(images[i], 3);
             }
-
             MNIST_PictureBox.Image = Bitmap_images[0];
 
             DownlButton.Enabled = false;
@@ -72,7 +47,6 @@ namespace MNIST_neuralnetwork
 
             int currentIndex = rand.Next(images.Length);
             MNIST_PictureBox.Image = Bitmap_images[currentIndex];
-           // DigitTypeLabel.Text = currentIndex.ToString(); // номер изображения в List<Bitmap>
         }
 
         private Bitmap VectorToBitmap(double[] vector, int width, int height)
