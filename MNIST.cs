@@ -107,9 +107,7 @@ namespace MNIST_neuralnetwork
                     {
                         byte b = brImages.ReadByte();
                         pixels[i][j] = b;
-
                         temp[di, i * 28 + j] = b;
-
                     }
                 }
 

@@ -9,12 +9,15 @@ namespace MNIST_neuralnetwork
 {
     public partial class NeuralNetworkForm : Form
     {
-        DigitImage[] images;
+        DigitImage[] images; //массив, в котором хранятся изображения в вектрном (пиксельном) формате
         Bitmap[] Bitmap_images;
         Random rand = new Random();
-        public int currentIndex = 1;
+        public int currentIndex = 0; // индекс текущего к показу изображения
         public KohonenNetwork kohonenNet;
-        MNIST mnist_train = new MNIST(20, 10000, 784);
+        MNIST mnist_train = new MNIST(20, 10000, 784); 
+        List<Bitmap> digits = new List<Bitmap>(); // список, в котором цифры хранятся по коллекциям в формате Bitmap
+        int countOfDigits = 10; // количество цифр
+
         public NeuralNetworkForm()
         {
             InitializeComponent();
@@ -22,78 +25,126 @@ namespace MNIST_neuralnetwork
         }
 
 
-
-
-       
-
-
-
         private void DownlButton_Click(object sender, EventArgs e)
         {
-            int[,] temp = new int[20, 784]; // Создаем массив для хранения пикселей всех изображений
-            images = mnist_train.LoadData(20, mnist_train.PixelFile, mnist_train.LabelFile, temp);
+            int[,] temp = new int[2000, 784]; // Создаем массив для хранения пикселей всех изображений
+            images = mnist_train.LoadData(2000, mnist_train.PixelFile, mnist_train.LabelFile, temp);
+            MessageBox.Show("База MNIST загружена.");
+            int[] numbers = GetCountsOfDigits();
             Bitmap_images = new Bitmap[images.Length];
             for (int i = 0; i < images.Length; i++)
             {
                 Bitmap_images[i] = mnist_train.MakeBitmap(images[i], 3);
             }
-            MNIST_PictureBox.Image = Bitmap_images[0];
+            //MNIST_PictureBox.Image = Bitmap_images[0];
 
             DownlButton.Enabled = false;
         }
 
-        private void NextButton_Click(object sender, EventArgs e)
+        private void InfoButton_Click(object sender, EventArgs e)
         {
 
-            int currentIndex = rand.Next(images.Length);
-            MNIST_PictureBox.Image = Bitmap_images[currentIndex];
-        }
-
-        private Bitmap VectorToBitmap(double[] vector, int width, int height)
-        {
-            var bitmap = new Bitmap(width, height);
-            int k = 0;
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
-                {
-                    int pixelValue = (int)(vector[k] * 255);
-                    bitmap.SetPixel(i, j, Color.FromArgb(pixelValue, pixelValue, pixelValue));
-                    k++;
-                }
-            }
-            return bitmap;
         }
 
         private void DetectButton_Click(object sender, EventArgs e)
         {
 
-            // попытка вызова функций
-            //List<double[]> TrainingImages = kohonenNet.ImagesToVectors(images);
-            //kohonenNet.Train(TrainingImages, 0.96, 0.01, 0.6);
+        }
 
-            //var clusterCenters = kohonenNet.GetClusterCenters();
+        private void DropDownList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedDigit = DropDownList.SelectedItem.ToString();
+            //int DigitAsInt = Int32.Parse(selectedDigit);
 
-            //// Преобразование центров кластеров обратно в изображения и отображение их в PictureBox
-            //for (int i = 0; i < clusterCenters.Count; i++)
-            //{
-            //    if (i >= 3) break; // Предполагаем, что у нас только три PictureBox
-            //    var centerImage = VectorToBitmap(clusterCenters[i], 28, 28); // Преобразование вектора обратно в Bitmap
-            //    switch (i)
-            //    {
-            //        case 0:
-            //            pictureBox1.Image = centerImage;
-            //            break;
-            //        case 1:
-            //            pictureBox2.Image = centerImage;
-            //            break;
-            //        case 2:
-            //            pictureBox3.Image = centerImage;
-            //            break;
-            //    }
 
-            //    //}
-            //}
+            switch (selectedDigit)
+            {
+                case "0":
+                    ShowSelectedDigit(selectedDigit, digits);
+                    break;
+                case "1":
+                    ShowSelectedDigit(selectedDigit, digits);
+                    break;
+                case "2":
+                    ShowSelectedDigit(selectedDigit, digits);
+                    break ;
+                case "3":
+                    ShowSelectedDigit(selectedDigit,digits);
+                    break;
+                case "4":
+                    ShowSelectedDigit(selectedDigit, digits);
+                    break;
+                case "5":
+                    ShowSelectedDigit(selectedDigit, digits);
+                    break;
+                case "6":
+                    ShowSelectedDigit(selectedDigit, digits);
+                    break;
+                case "7":
+                    ShowSelectedDigit(selectedDigit, digits);
+                    break;
+                case "8":
+                    ShowSelectedDigit(selectedDigit, digits);
+                    break;
+                case "9":
+                    ShowSelectedDigit(selectedDigit, digits);
+                    break;
+
+
+            }
+        }
+
+
+
+        private void PrevDigit_Click(object sender, EventArgs e)
+        {
+            if (currentIndex > 0)
+            {
+                currentIndex--;
+                MNIST_PictureBox.Image = digits[currentIndex];
+            }
+
+        }
+
+        private void NextDigit_Click(object sender, EventArgs e)
+        {
+            if (currentIndex < digits.Count - 1)
+            {
+                currentIndex++;
+                MNIST_PictureBox.Image = digits[currentIndex];
+            }
+            
+        }
+
+        public void ShowSelectedDigit (string selectedDigit, List<Bitmap> SelectedDigits)
+        {
+            SelectedDigits.Clear();
+            foreach (DigitImage digitImage in images)
+            {
+                if (digitImage.label.ToString() == selectedDigit)
+                {
+                    Bitmap image = mnist_train.MakeBitmap(digitImage, 3);
+                    SelectedDigits.Add(image);
+                }
+            }
+            MNIST_PictureBox.Image = SelectedDigits[currentIndex];
+
+        }
+
+        public int[] GetCountsOfDigits() // метод для получения количества экземпляров каждой цифры
+        {
+            int[] vs = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            for (int i = 0; i < images.Length; i++)
+            {
+                for (int j = 0; j < countOfDigits; j++)
+                {
+                    if (images[i].label == j)
+                    {
+                        vs[j]++;
+                    }
+                }
+            }
+            return vs;
         }
     }
 }

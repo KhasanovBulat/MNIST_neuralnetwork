@@ -51,6 +51,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DigitImage.cs" />
+    <Compile Include="InformationTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InformationTable.Designer.cs">
+      <DependentUpon>InformationTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="KohonenNetwork.cs" />
     <Compile Include="MNIST.cs" />
     <Compile Include="NeuralNetworkForm.cs">
@@ -62,6 +68,9 @@
     <Compile Include="Neuron.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="InformationTable.resx">
+      <DependentUpon>InformationTable.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="NeuralNetworkForm.resx">
       <DependentUpon>NeuralNetworkForm.cs</DependentUpon>
     </EmbeddedResource>

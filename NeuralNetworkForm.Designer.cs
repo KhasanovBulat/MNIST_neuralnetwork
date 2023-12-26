@@ -28,18 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NeuralNetworkForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.NextButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.InfoButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DetectButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DownlButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.NextDigit = new System.Windows.Forms.Button();
+            this.PrevDigit = new System.Windows.Forms.Button();
+            this.DropDownList = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.MNIST_PictureBox = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.kryptonComboBox1 = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.PrevDigit = new System.Windows.Forms.Button();
-            this.NextDigit = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -48,11 +50,12 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DropDownList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MNIST_PictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonComboBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -67,9 +70,10 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.pictureBox3);
+            this.splitContainer1.Panel2.Controls.Add(this.pictureBox4);
             this.splitContainer1.Panel2.Controls.Add(this.pictureBox2);
             this.splitContainer1.Panel2.Controls.Add(this.pictureBox1);
+            this.splitContainer1.Panel2.Controls.Add(this.pictureBox3);
             this.splitContainer1.Size = new System.Drawing.Size(800, 450);
             this.splitContainer1.SplitterDistance = 395;
             this.splitContainer1.TabIndex = 0;
@@ -83,7 +87,7 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.NextButton);
+            this.splitContainer2.Panel1.Controls.Add(this.InfoButton);
             this.splitContainer2.Panel1.Controls.Add(this.DetectButton);
             this.splitContainer2.Panel1.Controls.Add(this.DownlButton);
             // 
@@ -91,20 +95,20 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.NextDigit);
             this.splitContainer2.Panel2.Controls.Add(this.PrevDigit);
-            this.splitContainer2.Panel2.Controls.Add(this.kryptonComboBox1);
+            this.splitContainer2.Panel2.Controls.Add(this.DropDownList);
             this.splitContainer2.Panel2.Controls.Add(this.MNIST_PictureBox);
             this.splitContainer2.Size = new System.Drawing.Size(395, 450);
             this.splitContainer2.SplitterDistance = 60;
             this.splitContainer2.TabIndex = 0;
             // 
-            // NextButton
+            // InfoButton
             // 
-            this.NextButton.Location = new System.Drawing.Point(264, 12);
-            this.NextButton.Name = "NextButton";
-            this.NextButton.Size = new System.Drawing.Size(120, 32);
-            this.NextButton.TabIndex = 2;
-            this.NextButton.Values.Text = "Следующий";
-            this.NextButton.Click += new System.EventHandler(this.NextButton_Click);
+            this.InfoButton.Location = new System.Drawing.Point(264, 12);
+            this.InfoButton.Name = "InfoButton";
+            this.InfoButton.Size = new System.Drawing.Size(120, 32);
+            this.InfoButton.TabIndex = 2;
+            this.InfoButton.Values.Text = "Информация";
+            this.InfoButton.Click += new System.EventHandler(this.InfoButton_Click);
             // 
             // DetectButton
             // 
@@ -124,6 +128,47 @@
             this.DownlButton.Values.Text = "Загрузить";
             this.DownlButton.Click += new System.EventHandler(this.DownlButton_Click);
             // 
+            // NextDigit
+            // 
+            this.NextDigit.Image = ((System.Drawing.Image)(resources.GetObject("NextDigit.Image")));
+            this.NextDigit.Location = new System.Drawing.Point(97, 328);
+            this.NextDigit.Name = "NextDigit";
+            this.NextDigit.Size = new System.Drawing.Size(80, 32);
+            this.NextDigit.TabIndex = 4;
+            this.NextDigit.UseVisualStyleBackColor = true;
+            this.NextDigit.Click += new System.EventHandler(this.NextDigit_Click);
+            // 
+            // PrevDigit
+            // 
+            this.PrevDigit.Image = ((System.Drawing.Image)(resources.GetObject("PrevDigit.Image")));
+            this.PrevDigit.Location = new System.Drawing.Point(12, 328);
+            this.PrevDigit.Name = "PrevDigit";
+            this.PrevDigit.Size = new System.Drawing.Size(79, 32);
+            this.PrevDigit.TabIndex = 3;
+            this.PrevDigit.UseVisualStyleBackColor = true;
+            this.PrevDigit.Click += new System.EventHandler(this.PrevDigit_Click);
+            // 
+            // DropDownList
+            // 
+            this.DropDownList.DropDownWidth = 164;
+            this.DropDownList.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"});
+            this.DropDownList.Location = new System.Drawing.Point(12, 297);
+            this.DropDownList.Name = "DropDownList";
+            this.DropDownList.Size = new System.Drawing.Size(164, 25);
+            this.DropDownList.TabIndex = 2;
+            this.DropDownList.Text = "Цифра";
+            this.DropDownList.SelectedIndexChanged += new System.EventHandler(this.DropDownList_SelectedIndexChanged);
+            // 
             // MNIST_PictureBox
             // 
             this.MNIST_PictureBox.Location = new System.Drawing.Point(47, 22);
@@ -135,63 +180,35 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Location = new System.Drawing.Point(118, 216);
+            this.pictureBox3.Location = new System.Drawing.Point(223, 268);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(166, 170);
             this.pictureBox3.TabIndex = 2;
             this.pictureBox3.TabStop = false;
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Location = new System.Drawing.Point(205, 28);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(161, 158);
-            this.pictureBox2.TabIndex = 1;
-            this.pictureBox2.TabStop = false;
-            // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(25, 28);
+            this.pictureBox1.Location = new System.Drawing.Point(22, 86);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(152, 158);
-            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.Size = new System.Drawing.Size(166, 170);
+            this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
-            // kryptonComboBox1
+            // pictureBox2
             // 
-            this.kryptonComboBox1.DropDownWidth = 164;
-            this.kryptonComboBox1.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9"});
-            this.kryptonComboBox1.Location = new System.Drawing.Point(12, 297);
-            this.kryptonComboBox1.Name = "kryptonComboBox1";
-            this.kryptonComboBox1.Size = new System.Drawing.Size(164, 25);
-            this.kryptonComboBox1.TabIndex = 2;
-            this.kryptonComboBox1.Text = "Цифра";
+            this.pictureBox2.Location = new System.Drawing.Point(223, 86);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(166, 170);
+            this.pictureBox2.TabIndex = 4;
+            this.pictureBox2.TabStop = false;
             // 
-            // PrevDigit
+            // pictureBox4
             // 
-            this.PrevDigit.Location = new System.Drawing.Point(12, 328);
-            this.PrevDigit.Name = "PrevDigit";
-            this.PrevDigit.Size = new System.Drawing.Size(89, 32);
-            this.PrevDigit.TabIndex = 3;
-            this.PrevDigit.UseVisualStyleBackColor = true;
-            // 
-            // NextDigit
-            // 
-            this.NextDigit.Location = new System.Drawing.Point(107, 328);
-            this.NextDigit.Name = "NextDigit";
-            this.NextDigit.Size = new System.Drawing.Size(80, 32);
-            this.NextDigit.TabIndex = 4;
-            this.NextDigit.UseVisualStyleBackColor = true;
+            this.pictureBox4.Location = new System.Drawing.Point(22, 268);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(166, 170);
+            this.pictureBox4.TabIndex = 5;
+            this.pictureBox4.TabStop = false;
             // 
             // NeuralNetworkForm
             // 
@@ -209,11 +226,12 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DropDownList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MNIST_PictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonComboBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -223,16 +241,17 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private ComponentFactory.Krypton.Toolkit.KryptonButton NextButton;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton InfoButton;
         private ComponentFactory.Krypton.Toolkit.KryptonButton DetectButton;
         private ComponentFactory.Krypton.Toolkit.KryptonButton DownlButton;
         private System.Windows.Forms.PictureBox MNIST_PictureBox;
         private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private ComponentFactory.Krypton.Toolkit.KryptonComboBox kryptonComboBox1;
+        private ComponentFactory.Krypton.Toolkit.KryptonComboBox DropDownList;
         private System.Windows.Forms.Button NextDigit;
         private System.Windows.Forms.Button PrevDigit;
+        private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
