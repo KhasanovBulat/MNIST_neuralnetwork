@@ -12,9 +12,26 @@ namespace MNIST_neuralnetwork
 {
     public partial class InformationTable : Form
     {
-        public InformationTable()
+        int[] data;
+        public InformationTable(int[] data)
         {
+            this.data = data;
             InitializeComponent();
+        }
+
+        public void InformationTable_Load(object sender, EventArgs e)
+        {
+           
+            for (int i = 0; i < data.Length; i++)
+            {
+                int rowIndex = DataGridView.Rows.Add();
+                DataGridView.Rows[rowIndex].Cells[0].Value = i;
+                DataGridView.Rows[rowIndex].Cells[1].Value = data[i];
+
+            }
+                
+            
+            
         }
     }
 }

@@ -28,24 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.kryptonDataGridView1 = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
+            this.DataGridView = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             this.DigitType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DigitTypeNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonDataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridView)).BeginInit();
             this.SuspendLayout();
             // 
-            // kryptonDataGridView1
+            // DataGridView
             // 
-            this.kryptonDataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.kryptonDataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.DigitType,
             this.DigitTypeNumber});
-            this.kryptonDataGridView1.Location = new System.Drawing.Point(12, 12);
-            this.kryptonDataGridView1.Name = "kryptonDataGridView1";
-            this.kryptonDataGridView1.RowHeadersWidth = 51;
-            this.kryptonDataGridView1.RowTemplate.Height = 24;
-            this.kryptonDataGridView1.Size = new System.Drawing.Size(351, 308);
-            this.kryptonDataGridView1.TabIndex = 0;
+            this.DataGridView.Location = new System.Drawing.Point(12, 12);
+            this.DataGridView.Name = "DataGridView";
+            this.DataGridView.RowHeadersWidth = 51;
+            this.DataGridView.RowTemplate.Height = 24;
+            this.DataGridView.Size = new System.Drawing.Size(411, 340);
+            this.DataGridView.TabIndex = 0;
             // 
             // DigitType
             // 
@@ -65,18 +65,19 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(403, 339);
-            this.Controls.Add(this.kryptonDataGridView1);
+            this.ClientSize = new System.Drawing.Size(435, 373);
+            this.Controls.Add(this.DataGridView);
             this.Name = "InformationTable";
             this.Text = "InformationTable";
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonDataGridView1)).EndInit();
+            this.Load += new System.EventHandler(this.InformationTable_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private ComponentFactory.Krypton.Toolkit.KryptonDataGridView kryptonDataGridView1;
+        private ComponentFactory.Krypton.Toolkit.KryptonDataGridView DataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn DigitType;
         private System.Windows.Forms.DataGridViewTextBoxColumn DigitTypeNumber;
     }
