@@ -122,7 +122,20 @@ namespace MNIST_neuralnetwork
             return result;
         }
 
+        public DigitImage[] GetImagesForDigit(DigitImage[] allImages, int digit)
+        {
+            List<DigitImage> digitImages = new List<DigitImage>();
 
+            foreach (DigitImage image in allImages)
+            {
+                if (image.label == digit)
+                {
+                    digitImages.Add(image);
+                }
+            }
+
+            return digitImages.ToArray();
+        }
 
     }
 }

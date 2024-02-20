@@ -29,9 +29,7 @@ namespace MNIST_neuralnetwork
                 DataGridView.Rows[rowIndex].Cells[1].Value = data[i];
 
             }
-                
-            
-            
+           
         }
     }
 }
