@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,15 +9,15 @@ using System.Windows.Forms;
 
 namespace MNIST_neuralnetwork
 {
-    public class KohonenNetwork 
+    public class KohonenNetwork
     {
         //Neuron neuron;
         public List<Neuron> neurons;
         private Random random = new Random();
         int maxClusters;
         double[,] weights;
-        
-        public  KohonenNetwork()
+
+        public KohonenNetwork()
         {
             neurons = new List<Neuron>();
         }
@@ -31,8 +32,8 @@ namespace MNIST_neuralnetwork
             return Math.Sqrt(Sum);
         }
 
-       // преобразование изображения во входный вектор...
-       public List<double[]> ImagesToVectors(List<Bitmap> MNIST_dataset)
+        // преобразование изображения во входный вектор...
+        public List<double[]> ImagesToVectors(List<Bitmap> MNIST_dataset)
         {
             List<double[]> vectors = new List<double[]>(); //лист с векторами (пикселями) каждой картинки-цифры
             int width = 28;
@@ -40,7 +41,7 @@ namespace MNIST_neuralnetwork
 
             foreach (Bitmap img in MNIST_dataset)
             {
-                int size = width * height; 
+                int size = width * height;
                 double[] vector = new double[size];
                 int i = 0;
 
@@ -60,23 +61,20 @@ namespace MNIST_neuralnetwork
             return vectors;
         }
 
-        public void Train(int[,] inputPixels, double decayRate, double min_h, double h)
+        public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters)
         {
             int vectorSize = inputPixels.GetLength(1); // Размерность вектора (количество пикселей)
-            do
-            {
-                //Инициализация нейронов-2
-                for (int neuronIndex = 0; neuronIndex < 28; neuronIndex++)
-            {
-                Neuron newNeuron = new Neuron();
-                newNeuron.Weights = new double[vectorSize];
+            weights = new double[maxClusters, vectorSize]; // Массив весов
 
+            //Инициализация  весов-2
+            // Инициализация весов
+            for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
+            {
+                int randomIndex = random.Next(0, inputPixels.GetLength(0)); // Случайный индекс изображения
                 for (int i = 0; i < vectorSize; i++)
                 {
-                    newNeuron.Weights[i] = random.NextDouble();
+                    weights[clusterIndex, i] = inputPixels[randomIndex, i]; // Взятие весов из случайного изображения
                 }
-
-                neurons.Add(newNeuron);
             }
 
             // Инициализация весов
@@ -90,7 +88,8 @@ namespace MNIST_neuralnetwork
             //}
 
             // ПОИСК НЕЙРОНА-ПОБЕДИТЕЛЯ
-            
+            do
+            {
                 int randomIndex = new Random().Next(0, inputPixels.GetLength(0)); // Случайный индекс изображения
                 double[] inputVector = new double[vectorSize]; // Вектор входных данных (пиксели изображения)
 
@@ -128,29 +127,42 @@ namespace MNIST_neuralnetwork
                 // Обновляем скорость обучения
                 h *= decayRate;
             } while (h > min_h);
+            SaveWeightsToFile(weights);
         }
 
 
-        
+
+        private void SaveWeightsToFile(double[,] weights)
+        {
+            using (StreamWriter writer = new StreamWriter("weights.txt"))
+            {
+                for (int i = 0; i < weights.GetLength(0); i++)
+                {
+                    for (int j = 0; j < weights.GetLength(1); j++)
+                    {
+                        writer.Write(weights[i, j] + " ");
+                    }
+                    writer.WriteLine();
+                }
+            }
+        }
 
 
-
-        public void GetClusterCenters(PictureBox[] pictureBoxes)
+        public void GetClusterCenters(PictureBox[] pictureBoxes,  int maxClusters)
         {
             int width = 28;
             int height = 28;
 
-            for (int i = 0; i < neurons.Count; i++)
+            for (int i = 0; i < maxClusters; i++)
             {
                 int pictureBoxIndex = i % pictureBoxes.Length;
-                double[] weights = neurons[i].Weights;
 
                 // Создание массива пикселей
                 double[] imagePixels = new double[width * height];
 
-                for (int j = 0; j < weights.Length; j++)
+                for (int j = 0; j < imagePixels.Length; j++)
                 {
-                    imagePixels[j] = weights[j];
+                    imagePixels[j] = weights[i, j];
                 }
 
                 // Отображение изображения
@@ -163,20 +175,21 @@ namespace MNIST_neuralnetwork
                         int index = y * width + x;
 
                         // Преобразование значения пикселя в диапазон 0-255
-                        byte pixelValue = (byte)(imagePixels[index] * 255);
+                        byte pixelValue = (byte)imagePixels[index];
 
-                        bitmap.SetPixel(x, y, Color.FromArgb(pixelValue, pixelValue, pixelValue));
+                        bitmap.SetPixel(x, height-1-y, Color.FromArgb(pixelValue, pixelValue, pixelValue));
                     }
                 }
 
                 // Отображение изображения (необязательно)
-
-                pictureBoxes[pictureBoxIndex].Image = bitmap;
-                pictureBoxes[pictureBoxIndex].Show();
+                if (pictureBoxIndex < pictureBoxes.Length)
+                {
+                    pictureBoxes[pictureBoxIndex].Image = bitmap;
+                    pictureBoxes[pictureBoxIndex].Show();
+                }
             }
         }
 
+
     }
-
-
 }

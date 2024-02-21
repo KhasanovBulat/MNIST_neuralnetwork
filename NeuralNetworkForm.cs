@@ -50,10 +50,9 @@ namespace MNIST_neuralnetwork
 
         private void DetectButton_Click(object sender, EventArgs e)
         {
-            kohonenNet.Train(selectedDigits,0.96,0.01, 0.6);
-            
+            kohonenNet.Train(selectedDigits,0.96,0.01, 0.6, 3);
             PictureBox[] pictureBoxes = new PictureBox[] { pictureBox1, pictureBox2, pictureBox3, pictureBox4 };
-            kohonenNet.GetClusterCenters(pictureBoxes);
+            kohonenNet.GetClusterCenters(pictureBoxes, 3);
         }
 
         private void DropDownList_SelectedIndexChanged(object sender, EventArgs e)
