@@ -173,10 +173,10 @@ namespace MNIST_neuralnetwork
 
                 if (digitImages.Length > 0)
                 {
-                    int[,] SelectedDigitPixels = new int[digitImages.Length, 784];
+                    int[,] SelectedDigitPixels = new int[10, 784];
 
                     // Заполнение двумерного массива пикселей для конкретной цифры
-                    for (int i = 0; i < digitImages.Length; i++)
+                    for (int i = 0; i < 10; i++)
                     {
                         for (int j = 0; j < 784; j++)
                         {

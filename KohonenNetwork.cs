@@ -22,12 +22,12 @@ namespace MNIST_neuralnetwork
             neurons = new List<Neuron>();
         }
 
-        public double EuclideDistance(Neuron neuron, double[] input_vector)
+        public double EuclideDistance(double[] weights, double[] input_vector)
         {
             double Sum = 0;
             for (int i = 0; i < input_vector.Length; i++)
             {
-                Sum += Math.Pow(input_vector[i] - neuron.Weights[i], 2);
+                Sum += Math.Pow(input_vector[i] - weights[i], 2);
             }
             return Math.Sqrt(Sum);
         }
@@ -66,7 +66,7 @@ namespace MNIST_neuralnetwork
             int vectorSize = inputPixels.GetLength(1); // Размерность вектора (количество пикселей)
             weights = new double[maxClusters, vectorSize]; // Массив весов
 
-            //Инициализация  весов-2
+            
             // Инициализация весов
             for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
             {
@@ -76,51 +76,51 @@ namespace MNIST_neuralnetwork
                     weights[clusterIndex, i] = inputPixels[randomIndex, i]; // Взятие весов из случайного изображения
                 }
             }
-
-            // Инициализация весов
-            //foreach (Neuron neuron in neurons)
-            //{
-            //    neuron.Weights = new double[vectorSize];
-            //    for (int i = 0; i < vectorSize; i++)
-            //    {
-            //        neuron.Weights[i] = new Random().NextDouble();
-            //    }
-            //}
+            
+            
 
             // ПОИСК НЕЙРОНА-ПОБЕДИТЕЛЯ
             do
             {
                 int randomIndex = new Random().Next(0, inputPixels.GetLength(0)); // Случайный индекс изображения
-                double[] inputVector = new double[vectorSize]; // Вектор входных данных (пиксели изображения)
+                double[] inputVector = new double[vectorSize]; // Вектор входных данных (пиксели изображения) - обучающая выборка
 
                 for (int i = 0; i < vectorSize; i++)
                 {
                     inputVector[i] = inputPixels[randomIndex, i]; // Заполнение вектора пикселями
                 }
 
-                double minDistance = double.MaxValue; // Минимальное расстояние
+                double minDistance = double.MaxValue;  // Минимальное расстояние
                 int winnerIndex = -1; // Индекс нейрона-победителя
 
-                // Вычисление расстояния от каждого нейрона до текущего изображения
-                for (int i = 0; i < neurons.Count; i++)
+                for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
                 {
-                    double distance = EuclideDistance(neurons[i], inputVector);
+                    double[] neuronWeights = new double[vectorSize];
+                    for (int i = 0; i < vectorSize; i++)
+                    {
+                        neuronWeights[i] = weights[clusterIndex, i];
+                    }
+
+                    // Вычисление расстояния от каждого нейрона (кластера) до текущего изображения
+                    
+                    double distance = EuclideDistance(neuronWeights, inputVector);
                     if (distance < minDistance)
                     {
                         minDistance = distance;
-                        winnerIndex = i;
+                        winnerIndex = clusterIndex;
                     }
                 }
 
-                // ОБНОВЛЕНИЕ ВЕСОВ
+                // ОБНОВЛЕНИЕ ВЕСОВ (переписать)
                 if (winnerIndex != -1)
                 {
                     for (int i = 0; i < vectorSize; i++)
                     {
                         // Вычисление величины изменения веса
-                        double weightChange = h * (inputVector[i] - neurons[winnerIndex].Weights[i]);
+                        double weightChange = h * (inputVector[i] - weights[winnerIndex, i]);
                         // Обновление веса
-                        neurons[winnerIndex].Weights[i] += weightChange;
+                        weights[winnerIndex, i] += weightChange;
+                        //neurons[winnerIndex].Weights[i] += weightChange;
                     }
                 }
 
@@ -136,10 +136,12 @@ namespace MNIST_neuralnetwork
         {
             using (StreamWriter writer = new StreamWriter("weights.txt"))
             {
+                DateTime dateTime = new DateTime();
+                writer.Write(DateTime.Now +"\n");
                 for (int i = 0; i < weights.GetLength(0); i++)
                 {
                     for (int j = 0; j < weights.GetLength(1); j++)
-                    {
+                    { 
                         writer.Write(weights[i, j] + " ");
                     }
                     writer.WriteLine();
@@ -177,7 +179,7 @@ namespace MNIST_neuralnetwork
                         // Преобразование значения пикселя в диапазон 0-255
                         byte pixelValue = (byte)imagePixels[index];
 
-                        bitmap.SetPixel(x, height-1-y, Color.FromArgb(pixelValue, pixelValue, pixelValue));
+                        bitmap.SetPixel(x, y, Color.FromArgb(pixelValue, pixelValue, pixelValue));
                     }
                 }
 
