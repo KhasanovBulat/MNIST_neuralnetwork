@@ -18,6 +18,7 @@ namespace MNIST_neuralnetwork
         int countOfDigits = 10; // количество цифр
         int[] DigitsCountInGroup; // массив, в котором хранятся количество цифрв в каждом классе цифр от 0 до 9
         int[,] selectedDigits;
+        int clustersCount;
 
         public NeuralNetworkForm()
         {
@@ -43,6 +44,7 @@ namespace MNIST_neuralnetwork
 
         private void InfoButton_Click(object sender, EventArgs e)
         {
+
             InformationTable info_table = new InformationTable(DigitsCountInGroup);
             info_table.Show();
             info_table.Enabled = false;
@@ -50,9 +52,10 @@ namespace MNIST_neuralnetwork
 
         private void DetectButton_Click(object sender, EventArgs e)
         {
-            kohonenNet.Train(selectedDigits,0.96,0.01, 0.6, 3);
-            PictureBox[] pictureBoxes = new PictureBox[] { pictureBox1, pictureBox2, pictureBox3, pictureBox4 };
-            kohonenNet.GetClusterCenters(pictureBoxes, 3);
+            
+            kohonenNet.Train(selectedDigits,0.96,0.01, 0.6, clustersCount);
+            PictureBox[] pictureBoxes = new PictureBox[] { pictureBox1, pictureBox2, pictureBox3, pictureBox4, pictureBox5 };
+            kohonenNet.GetClusterCenters(pictureBoxes, clustersCount);
         }
 
         private void DropDownList_SelectedIndexChanged(object sender, EventArgs e)
@@ -173,10 +176,10 @@ namespace MNIST_neuralnetwork
 
                 if (digitImages.Length > 0)
                 {
-                    int[,] SelectedDigitPixels = new int[10, 784];
+                    int[,] SelectedDigitPixels = new int[digitImages.Length, 784];
 
                     // Заполнение двумерного массива пикселей для конкретной цифры
-                    for (int i = 0; i < 10; i++)
+                    for (int i = 0; i < SelectedDigitPixels.GetLength(0); i++)
                     {
                         for (int j = 0; j < 784; j++)
                         {
@@ -188,6 +191,25 @@ namespace MNIST_neuralnetwork
                 }
             }
             return new int[0, 0];
+        }
+
+        
+
+        private void ClusterCountChoice3_CheckedChanged(object sender, EventArgs e)
+        {
+            clustersCount = Int32.Parse(ClusterCountChoice3.Text);
+            DetectButton.Enabled = true;
+        }
+
+        private void ClusterCountChoice5_CheckedChanged(object sender, EventArgs e)
+        {
+            clustersCount = Int32.Parse(ClusterCountChoice5.Text);
+            DetectButton.Enabled= true;
+        }
+
+        private void NeuralNetworkForm_Load(object sender, EventArgs e)
+        {
+            DetectButton.Enabled = false;
         }
     }
 }

@@ -61,7 +61,32 @@ namespace MNIST_neuralnetwork
             return vectors;
         }
 
-        public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters)
+        public int MinimumDistanceIndex(double[] inputVector, int maxClusters)
+        {
+            double minDistance = double.MaxValue;  // Минимальное расстояние
+            int winnerIndex = -1; // Индекс нейрона-победителя
+
+            for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
+            {
+                double[] neuronWeights = new double[inputVector.Length];
+                for (int i = 0; i < inputVector.Length; i++)
+                {
+                    neuronWeights[i] = weights[clusterIndex, i];
+                }
+
+                // Вычисление расстояния от каждого нейрона (кластера) до текущего изображения
+                double distance = EuclideDistance(neuronWeights, inputVector);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    winnerIndex = clusterIndex;
+                }
+            }
+
+            return winnerIndex;
+        }
+
+            public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters)
         {
             int vectorSize = inputPixels.GetLength(1); // Размерность вектора (количество пикселей)
             weights = new double[maxClusters, vectorSize]; // Массив весов
@@ -90,29 +115,10 @@ namespace MNIST_neuralnetwork
                     inputVector[i] = inputPixels[randomIndex, i]; // Заполнение вектора пикселями
                 }
 
-                double minDistance = double.MaxValue;  // Минимальное расстояние
-                int winnerIndex = -1; // Индекс нейрона-победителя
+                    int winnerIndex = MinimumDistanceIndex(inputVector, maxClusters);
 
-                for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
-                {
-                    double[] neuronWeights = new double[vectorSize];
-                    for (int i = 0; i < vectorSize; i++)
-                    {
-                        neuronWeights[i] = weights[clusterIndex, i];
-                    }
-
-                    // Вычисление расстояния от каждого нейрона (кластера) до текущего изображения
-                    
-                    double distance = EuclideDistance(neuronWeights, inputVector);
-                    if (distance < minDistance)
-                    {
-                        minDistance = distance;
-                        winnerIndex = clusterIndex;
-                    }
-                }
-
-                // ОБНОВЛЕНИЕ ВЕСОВ (переписать)
-                if (winnerIndex != -1)
+                    // ОБНОВЛЕНИЕ ВЕСОВ (переписать)
+                    if (winnerIndex != -1)
                 {
                     for (int i = 0; i < vectorSize; i++)
                     {
@@ -120,7 +126,7 @@ namespace MNIST_neuralnetwork
                         double weightChange = h * (inputVector[i] - weights[winnerIndex, i]);
                         // Обновление веса
                         weights[winnerIndex, i] += weightChange;
-                        //neurons[winnerIndex].Weights[i] += weightChange;
+                        
                     }
                 }
 
@@ -177,11 +183,12 @@ namespace MNIST_neuralnetwork
                         int index = y * width + x;
 
                         // Преобразование значения пикселя в диапазон 0-255
-                        byte pixelValue = (byte)imagePixels[index];
+                        byte invertedPixelValue = (byte)(255 - imagePixels[index]);
 
-                        bitmap.SetPixel(x, y, Color.FromArgb(pixelValue, pixelValue, pixelValue));
+                        bitmap.SetPixel(x, y, Color.FromArgb(invertedPixelValue, invertedPixelValue, invertedPixelValue));
                     }
                 }
+                bitmap.RotateFlip(RotateFlipType.Rotate90FlipX);
 
                 // Отображение изображения (необязательно)
                 if (pictureBoxIndex < pictureBoxes.Length)
