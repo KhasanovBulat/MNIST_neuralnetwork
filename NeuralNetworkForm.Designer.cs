@@ -34,18 +34,14 @@
             this.InfoButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DetectButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DownlButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.ClusterCountChoice5 = new System.Windows.Forms.RadioButton();
-            this.ClusterCountChoice3 = new System.Windows.Forms.RadioButton();
             this.ClustersCountChoiceLabel = new System.Windows.Forms.Label();
             this.NextDigit = new System.Windows.Forms.Button();
             this.PrevDigit = new System.Windows.Forms.Button();
             this.DropDownList = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.MNIST_PictureBox = new System.Windows.Forms.PictureBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.ClusterCountChoice = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -56,11 +52,7 @@
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DropDownList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MNIST_PictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ClusterCountChoice)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -75,11 +67,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.pictureBox5);
-            this.splitContainer1.Panel2.Controls.Add(this.pictureBox4);
-            this.splitContainer1.Panel2.Controls.Add(this.pictureBox2);
-            this.splitContainer1.Panel2.Controls.Add(this.pictureBox1);
-            this.splitContainer1.Panel2.Controls.Add(this.pictureBox3);
+            this.splitContainer1.Panel2.Controls.Add(this.flowLayoutPanel1);
             this.splitContainer1.Size = new System.Drawing.Size(995, 441);
             this.splitContainer1.SplitterDistance = 491;
             this.splitContainer1.TabIndex = 0;
@@ -99,8 +87,7 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.ClusterCountChoice5);
-            this.splitContainer2.Panel2.Controls.Add(this.ClusterCountChoice3);
+            this.splitContainer2.Panel2.Controls.Add(this.ClusterCountChoice);
             this.splitContainer2.Panel2.Controls.Add(this.ClustersCountChoiceLabel);
             this.splitContainer2.Panel2.Controls.Add(this.NextDigit);
             this.splitContainer2.Panel2.Controls.Add(this.PrevDigit);
@@ -136,30 +123,6 @@
             this.DownlButton.TabIndex = 0;
             this.DownlButton.Values.Text = "Загрузить";
             this.DownlButton.Click += new System.EventHandler(this.DownlButton_Click);
-            // 
-            // ClusterCountChoice5
-            // 
-            this.ClusterCountChoice5.AutoSize = true;
-            this.ClusterCountChoice5.Location = new System.Drawing.Point(282, 328);
-            this.ClusterCountChoice5.Name = "ClusterCountChoice5";
-            this.ClusterCountChoice5.Size = new System.Drawing.Size(35, 20);
-            this.ClusterCountChoice5.TabIndex = 7;
-            this.ClusterCountChoice5.TabStop = true;
-            this.ClusterCountChoice5.Text = "5";
-            this.ClusterCountChoice5.UseVisualStyleBackColor = true;
-            this.ClusterCountChoice5.CheckedChanged += new System.EventHandler(this.ClusterCountChoice5_CheckedChanged);
-            // 
-            // ClusterCountChoice3
-            // 
-            this.ClusterCountChoice3.AutoSize = true;
-            this.ClusterCountChoice3.Location = new System.Drawing.Point(220, 328);
-            this.ClusterCountChoice3.Name = "ClusterCountChoice3";
-            this.ClusterCountChoice3.Size = new System.Drawing.Size(35, 20);
-            this.ClusterCountChoice3.TabIndex = 6;
-            this.ClusterCountChoice3.TabStop = true;
-            this.ClusterCountChoice3.Text = "3";
-            this.ClusterCountChoice3.UseVisualStyleBackColor = true;
-            this.ClusterCountChoice3.CheckedChanged += new System.EventHandler(this.ClusterCountChoice3_CheckedChanged);
             // 
             // ClustersCountChoiceLabel
             // 
@@ -204,7 +167,7 @@
             "7",
             "8",
             "9"});
-            this.DropDownList.Location = new System.Drawing.Point(12, 297);
+            this.DropDownList.Location = new System.Drawing.Point(13, 297);
             this.DropDownList.Name = "DropDownList";
             this.DropDownList.Size = new System.Drawing.Size(164, 25);
             this.DropDownList.TabIndex = 2;
@@ -220,50 +183,42 @@
             this.MNIST_PictureBox.TabIndex = 0;
             this.MNIST_PictureBox.TabStop = false;
             // 
-            // pictureBox5
+            // flowLayoutPanel1
             // 
-            this.pictureBox5.Location = new System.Drawing.Point(340, 119);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(145, 145);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox5.TabIndex = 6;
-            this.pictureBox5.TabStop = false;
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(497, 435);
+            this.flowLayoutPanel1.TabIndex = 7;
             // 
-            // pictureBox4
+            // ClusterCountChoice
             // 
-            this.pictureBox4.Location = new System.Drawing.Point(22, 200);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(145, 145);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 5;
-            this.pictureBox4.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Location = new System.Drawing.Point(189, 31);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(145, 145);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 4;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(22, 31);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(145, 145);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Location = new System.Drawing.Point(189, 200);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(145, 145);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 2;
-            this.pictureBox3.TabStop = false;
+            this.ClusterCountChoice.DropDownWidth = 164;
+            this.ClusterCountChoice.Items.AddRange(new object[] {
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20"});
+            this.ClusterCountChoice.Location = new System.Drawing.Point(220, 328);
+            this.ClusterCountChoice.Name = "ClusterCountChoice";
+            this.ClusterCountChoice.Size = new System.Drawing.Size(164, 25);
+            this.ClusterCountChoice.TabIndex = 8;
+            this.ClusterCountChoice.Text = "Количество кластеров";
+            this.ClusterCountChoice.SelectedIndexChanged += new System.EventHandler(this.ClusterCountChoice_SelectedIndexChanged);
             // 
             // NeuralNetworkForm
             // 
@@ -285,11 +240,7 @@
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DropDownList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MNIST_PictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ClusterCountChoice)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -303,17 +254,13 @@
         private ComponentFactory.Krypton.Toolkit.KryptonButton DetectButton;
         private ComponentFactory.Krypton.Toolkit.KryptonButton DownlButton;
         private System.Windows.Forms.PictureBox MNIST_PictureBox;
-        private System.Windows.Forms.PictureBox pictureBox3;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox DropDownList;
         private System.Windows.Forms.Button NextDigit;
         private System.Windows.Forms.Button PrevDigit;
-        private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label ClustersCountChoiceLabel;
-        private System.Windows.Forms.RadioButton ClusterCountChoice3;
-        private System.Windows.Forms.RadioButton ClusterCountChoice5;
-        private System.Windows.Forms.PictureBox pictureBox5;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonComboBox ClusterCountChoice;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 

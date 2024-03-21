@@ -19,6 +19,7 @@ namespace MNIST_neuralnetwork
         int[] DigitsCountInGroup; // массив, в котором хранятся количество цифрв в каждом классе цифр от 0 до 9
         int[,] selectedDigits;
         int clustersCount;
+        private PictureBox[] pictureBoxes; 
 
         public NeuralNetworkForm()
         {
@@ -54,7 +55,7 @@ namespace MNIST_neuralnetwork
         {
             
             kohonenNet.Train(selectedDigits,0.96,0.01, 0.6, clustersCount);
-            PictureBox[] pictureBoxes = new PictureBox[] { pictureBox1, pictureBox2, pictureBox3, pictureBox4, pictureBox5 };
+            CreatePictureBoxes(clustersCount);
             kohonenNet.GetClusterCenters(pictureBoxes, clustersCount);
         }
 
@@ -197,19 +198,45 @@ namespace MNIST_neuralnetwork
 
         private void ClusterCountChoice3_CheckedChanged(object sender, EventArgs e)
         {
-            clustersCount = Int32.Parse(ClusterCountChoice3.Text);
+            clustersCount = Int32.Parse(ClusterCountChoice.Text);
             DetectButton.Enabled = true;
         }
 
-        private void ClusterCountChoice5_CheckedChanged(object sender, EventArgs e)
-        {
-            clustersCount = Int32.Parse(ClusterCountChoice5.Text);
-            DetectButton.Enabled= true;
-        }
+        
 
         private void NeuralNetworkForm_Load(object sender, EventArgs e)
         {
             DetectButton.Enabled = false;
+        }
+        public void CreatePictureBoxes(int ClusterCount)
+        {
+            // Очищаем FlowLayoutPanel перед добавлением новых пикчербоксов
+            flowLayoutPanel1.Controls.Clear();
+
+            // Инициализируем массив пикчербоксов
+            pictureBoxes = new PictureBox[ClusterCount];
+
+            // Создаем пикчербоксы в цикле
+            for (int i = 0; i < ClusterCount; i++)
+            {
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.Size = new Size(145, 145); // Размер пикчербокса
+                pictureBox.BorderStyle = BorderStyle.FixedSingle;
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                flowLayoutPanel1.Controls.Add(pictureBox);
+                pictureBoxes[i] = pictureBox; // Добавляем пикчербокс в массив
+            }
+        }
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ClusterCountChoice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            clustersCount = Int32.Parse(ClusterCountChoice.SelectedItem.ToString());
+            DetectButton.Enabled = true;
         }
     }
 }

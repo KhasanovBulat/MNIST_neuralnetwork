@@ -87,7 +87,7 @@ namespace MNIST_neuralnetwork
         }
 
             public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters)
-        {
+            {
             int vectorSize = inputPixels.GetLength(1); // Размерность вектора (количество пикселей)
             weights = new double[maxClusters, vectorSize]; // Массив весов
 
