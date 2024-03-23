@@ -132,8 +132,12 @@ namespace MNIST_neuralnetwork
                 {
                     digitImages.Add(image);
                 }
+                else if (digit == 10)
+                {
+                    digitImages.Add(image);
+                }
             }
-
+            
             return digitImages.ToArray();
         }
 

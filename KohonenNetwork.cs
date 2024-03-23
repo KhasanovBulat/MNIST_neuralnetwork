@@ -140,15 +140,17 @@ namespace MNIST_neuralnetwork
 
         private void SaveWeightsToFile(double[,] weights)
         {
-            using (StreamWriter writer = new StreamWriter("weights.txt"))
+            DateTime dateTime = new DateTime();
+            for (int i = 0; i < weights.GetLength(0); i++)
             {
-                DateTime dateTime = new DateTime();
-                writer.Write(DateTime.Now +"\n");
-                for (int i = 0; i < weights.GetLength(0); i++)
+                string fileName = $"weights_digit_{i}_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}_{DateTime.Now.Hour}-{DateTime.Now.Minute}.txt";
+                using (StreamWriter writer = new StreamWriter(fileName))
                 {
+                    
+                    writer.Write(DateTime.Now + "\n");
                     for (int j = 0; j < weights.GetLength(1); j++)
-                    { 
-                        writer.Write(weights[i, j] + " ");
+                    {
+                        writer.Write(Math.Round(weights[i, j], 2) + " ");
                     }
                     writer.WriteLine();
                 }

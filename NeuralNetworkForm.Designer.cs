@@ -166,7 +166,8 @@
             "6",
             "7",
             "8",
-            "9"});
+            "9",
+            "All images"});
             this.DropDownList.Location = new System.Drawing.Point(13, 297);
             this.DropDownList.Name = "DropDownList";
             this.DropDownList.Size = new System.Drawing.Size(164, 25);

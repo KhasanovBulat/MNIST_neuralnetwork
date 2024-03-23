@@ -62,53 +62,65 @@ namespace MNIST_neuralnetwork
         private void DropDownList_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedDigit = DropDownList.SelectedItem.ToString();
-            int DigitAsInt = Int32.Parse(selectedDigit);
+            //int DigitAsInt = Int32.Parse(selectedDigit);
 
 
             switch (selectedDigit)
             {
                 case "0":
+                    int DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
                     selectedDigits = MakeSelectedDigitArray(images, DigitAsInt);
                     break;
                 case "1":
+                    DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
                     selectedDigits = MakeSelectedDigitArray(images, DigitAsInt);
                     break;
                 case "2":
+                    DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
                     selectedDigits = MakeSelectedDigitArray(images, DigitAsInt);
                     break ;
                 case "3":
+                    DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit,digits);
                     selectedDigits = MakeSelectedDigitArray(images, DigitAsInt);
                     break;
                 case "4":
+                    DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
                     selectedDigits = MakeSelectedDigitArray(images, DigitAsInt);
                     break;
                 case "5":
+                    DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
                     selectedDigits = MakeSelectedDigitArray(images, DigitAsInt);
                     break;
                 case "6":
+                    DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
                     selectedDigits = MakeSelectedDigitArray(images, DigitAsInt);
                     break;
                 case "7":
+                    DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
                     selectedDigits = MakeSelectedDigitArray(images, DigitAsInt);
                     break;
                 case "8":
+                    DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
                     selectedDigits = MakeSelectedDigitArray(images, DigitAsInt);
                     break;
                 case "9":
+                    DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
                     selectedDigits = MakeSelectedDigitArray(images, DigitAsInt);
                     break;
-
-
+                case "All images":
+                    ShowSelectedDigit(selectedDigit, digits);
+                    selectedDigits = MakeSelectedDigitArray(images, 10);
+                    break;
             }
         }
 
@@ -145,6 +157,11 @@ namespace MNIST_neuralnetwork
                     Bitmap image = mnist_train.MakeBitmap(digitImage, 3);
                     SelectedDigits.Add(image);
                 }
+                else if (selectedDigit == "All images")
+                {
+                    Bitmap image = mnist_train.MakeBitmap(digitImage, 3);
+                    SelectedDigits.Add(image);
+                }
             }
             MNIST_PictureBox.Image = SelectedDigits[currentIndex];
 
@@ -169,7 +186,15 @@ namespace MNIST_neuralnetwork
 
         public int[,] MakeSelectedDigitArray(DigitImage[] images, int selectedDigit)
         {
-            int count = DigitsCountInGroup[selectedDigit];
+            int count;
+            if (selectedDigit == 10)
+            {
+                count = 60000;
+            } else
+            {
+                count = DigitsCountInGroup[selectedDigit];
+
+            }
 
             if (count > 0)
             {
