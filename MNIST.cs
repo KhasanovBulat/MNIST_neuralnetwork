@@ -24,8 +24,10 @@ namespace MNIST_neuralnetwork
 
         public string PixelFile = @"C:\Users\khasa\source\repos\MNIST_neuralnetwork\bin\Debug\mnist_byte\train-images.idx3-ubyte";
         public string LabelFile = @"C:\Users\khasa\source\repos\MNIST_neuralnetwork\bin\Debug\mnist_byte\train-labels.idx1-ubyte";
+        public string testLabelFile = @"C:\Users\khasa\source\repos\MNIST_neuralnetwork\bin\Debug\mnist_byte\t10k-labels.idx1-ubyte";
+        public string testPixelFile = @"C:\Users\khasa\source\repos\MNIST_neuralnetwork\bin\Debug\mnist_byte\t10k-images.idx3-ubyte";
         //string path = $"{Environment.CurrentDirectory}\\mnist_jpeg\\training\\";
-        
+
 
         //public List<Bitmap> DownloadDataBase(string path)
         //{

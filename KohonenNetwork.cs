@@ -147,7 +147,7 @@ namespace MNIST_neuralnetwork
                 using (StreamWriter writer = new StreamWriter(fileName))
                 {
                     
-                    writer.Write(DateTime.Now + "\n");
+                    //writer.Write(DateTime.Now + "\n");
                     for (int j = 0; j < weights.GetLength(1); j++)
                     {
                         writer.Write(Math.Round(weights[i, j], 2) + " ");
@@ -200,6 +200,77 @@ namespace MNIST_neuralnetwork
                 }
             }
         }
+
+
+
+        // Метод для загрузки весов кластеров из файлов
+        public double[,] LoadClusterWeights(string folderPath, int maxClusters)
+        {
+           double[,] weights_clust = new double[maxClusters, 784]; // Предполагается, что размерность весов 784 (по количеству пикселей)
+
+            for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
+            {
+                string filePath = Path.Combine(folderPath, $"weights_digit_{clusterIndex}_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}_{DateTime.Now.Hour}-{DateTime.Now.Minute}.txt");
+                if (File.Exists(filePath))
+                {
+                    string[] lines = File.ReadAllLines(filePath);
+                    string[] weightsString = lines[0].Split(' '); // Разделение строки на отдельные числа
+                    for (int i = 0; i < 784; i++) // Предполагается, что размерность весов 784 (по количеству пикселей)
+                    {
+                        weights_clust[clusterIndex, i] = double.Parse(weightsString[i]); // Преобразование чисел из строкового формата в double
+                    }
+                }
+                else
+                {
+                    throw new FileNotFoundException($"File not found: {filePath}");
+                }
+            }
+            return weights_clust;
+        }
+
+
+        // Метод для классификации тестовых изображений
+
+        public int[] ClassifyTestImages(int[,] testImages, double[,] clusterWeights)
+        {
+            int maxClusters = clusterWeights.GetLength(0);
+            int[] classifications = new int[testImages.GetLength(0)]; // Длина массива равна числу строк в testImages
+
+            for (int i = 0; i < testImages.GetLength(0); i++)
+            {
+                double[] imageVector = new double[testImages.GetLength(1)];
+                for (int j = 0; j < testImages.GetLength(1); j++)
+                {
+                    imageVector[j] = testImages[i, j];
+                }
+
+                double minDistance = double.MaxValue;
+                int nearestCluster = -1;
+
+                // Находим ближайший кластер для текущего изображения
+                for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
+                {
+                    double[] clusterWeightsVector = new double[clusterWeights.GetLength(1)];
+                    for (int k = 0; k < clusterWeights.GetLength(1); k++)
+                    {
+                        clusterWeightsVector[k] = clusterWeights[clusterIndex, k];
+                    }
+
+                    double distance = EuclideDistance(clusterWeightsVector, imageVector);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        nearestCluster = clusterIndex;
+                    }
+                }
+
+                classifications[i] = nearestCluster;
+            }
+
+            return classifications;
+        }
+
+
 
 
     }
