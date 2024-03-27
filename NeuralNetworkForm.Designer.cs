@@ -34,6 +34,7 @@
             this.InfoButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DetectButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DownlButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.ClusterCountChoice = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.ClustersCountChoiceLabel = new System.Windows.Forms.Label();
             this.NextDigit = new System.Windows.Forms.Button();
             this.PrevDigit = new System.Windows.Forms.Button();
@@ -41,7 +42,7 @@
             this.MNIST_PictureBox = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.ClusterCountChoice = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
+            this.kryptonButton1 = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -50,9 +51,9 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ClusterCountChoice)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DropDownList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MNIST_PictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ClusterCountChoice)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -81,6 +82,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.kryptonButton1);
             this.splitContainer2.Panel1.Controls.Add(this.InfoButton);
             this.splitContainer2.Panel1.Controls.Add(this.DetectButton);
             this.splitContainer2.Panel1.Controls.Add(this.DownlButton);
@@ -99,18 +101,18 @@
             // 
             // InfoButton
             // 
-            this.InfoButton.Location = new System.Drawing.Point(264, 12);
+            this.InfoButton.Location = new System.Drawing.Point(229, 12);
             this.InfoButton.Name = "InfoButton";
-            this.InfoButton.Size = new System.Drawing.Size(120, 32);
+            this.InfoButton.Size = new System.Drawing.Size(113, 32);
             this.InfoButton.TabIndex = 2;
             this.InfoButton.Values.Text = "Информация";
             this.InfoButton.Click += new System.EventHandler(this.InfoButton_Click);
             // 
             // DetectButton
             // 
-            this.DetectButton.Location = new System.Drawing.Point(138, 12);
+            this.DetectButton.Location = new System.Drawing.Point(119, 12);
             this.DetectButton.Name = "DetectButton";
-            this.DetectButton.Size = new System.Drawing.Size(120, 32);
+            this.DetectButton.Size = new System.Drawing.Size(104, 32);
             this.DetectButton.TabIndex = 1;
             this.DetectButton.Values.Text = "Распознать";
             this.DetectButton.Click += new System.EventHandler(this.DetectButton_Click);
@@ -119,10 +121,39 @@
             // 
             this.DownlButton.Location = new System.Drawing.Point(12, 12);
             this.DownlButton.Name = "DownlButton";
-            this.DownlButton.Size = new System.Drawing.Size(120, 32);
+            this.DownlButton.Size = new System.Drawing.Size(101, 32);
             this.DownlButton.TabIndex = 0;
             this.DownlButton.Values.Text = "Загрузить";
             this.DownlButton.Click += new System.EventHandler(this.DownlButton_Click);
+            // 
+            // ClusterCountChoice
+            // 
+            this.ClusterCountChoice.DropDownWidth = 164;
+            this.ClusterCountChoice.Items.AddRange(new object[] {
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20"});
+            this.ClusterCountChoice.Location = new System.Drawing.Point(220, 328);
+            this.ClusterCountChoice.Name = "ClusterCountChoice";
+            this.ClusterCountChoice.Size = new System.Drawing.Size(164, 25);
+            this.ClusterCountChoice.TabIndex = 8;
+            this.ClusterCountChoice.Text = "Количество кластеров";
+            this.ClusterCountChoice.SelectedIndexChanged += new System.EventHandler(this.ClusterCountChoice_SelectedIndexChanged);
             // 
             // ClustersCountChoiceLabel
             // 
@@ -192,34 +223,14 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(497, 435);
             this.flowLayoutPanel1.TabIndex = 7;
             // 
-            // ClusterCountChoice
+            // kryptonButton1
             // 
-            this.ClusterCountChoice.DropDownWidth = 164;
-            this.ClusterCountChoice.Items.AddRange(new object[] {
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20"});
-            this.ClusterCountChoice.Location = new System.Drawing.Point(220, 328);
-            this.ClusterCountChoice.Name = "ClusterCountChoice";
-            this.ClusterCountChoice.Size = new System.Drawing.Size(164, 25);
-            this.ClusterCountChoice.TabIndex = 8;
-            this.ClusterCountChoice.Text = "Количество кластеров";
-            this.ClusterCountChoice.SelectedIndexChanged += new System.EventHandler(this.ClusterCountChoice_SelectedIndexChanged);
+            this.kryptonButton1.Location = new System.Drawing.Point(348, 12);
+            this.kryptonButton1.Name = "kryptonButton1";
+            this.kryptonButton1.Size = new System.Drawing.Size(140, 32);
+            this.kryptonButton1.TabIndex = 3;
+            this.kryptonButton1.Values.Text = "Тестовая выборка";
+            this.kryptonButton1.Click += new System.EventHandler(this.kryptonButton1_Click);
             // 
             // NeuralNetworkForm
             // 
@@ -239,9 +250,9 @@
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ClusterCountChoice)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DropDownList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MNIST_PictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ClusterCountChoice)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -262,6 +273,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox ClusterCountChoice;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton kryptonButton1;
     }
 }
 

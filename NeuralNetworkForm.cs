@@ -9,7 +9,7 @@ namespace MNIST_neuralnetwork
 {
     public partial class NeuralNetworkForm : Form
     {
-        DigitImage[] trainImages; //массив, в котором хранятся изображения в векторном (пиксельном) формате
+        DigitImage[] testImages; //массив, в котором хранятся изображения в векторном (пиксельном) формате
         int[,] temp_train = new int[60000, 784]; // двумерный массив для хранения пикселей всех изображений обучающей выборки (количество экземпляров, размерность вектора)
         int[,] temp_test = new int[10000, 28 * 28]; // Создаем временный массив для хранения пикселей тестовой выборки
         public int currentIndex = 0; // индекс текущего к показу изображения
@@ -31,7 +31,7 @@ namespace MNIST_neuralnetwork
 
         private void DownlButton_Click(object sender, EventArgs e)
         {
-            trainImages = mnist_train.LoadData(60000, mnist_train.PixelFile, mnist_train.LabelFile, temp_train);
+            this.testImages = mnist_train.LoadData(60000, mnist_train.PixelFile, mnist_train.LabelFile, temp_train);
            
             DigitsCountInGroup = GetCountsOfDigits();
 
@@ -58,7 +58,8 @@ namespace MNIST_neuralnetwork
             kohonenNet.GetClusterCenters(pictureBoxes, clustersCount);
             string FolderPath = Environment.CurrentDirectory;
             double[,] clustersWeights = kohonenNet.LoadClusterWeights(FolderPath, clustersCount);
-          int[] clustersClassification = kohonenNet.ClassifyTestImages(temp_test, clustersWeights);
+           int[] clustersClassification = kohonenNet.ClassifyTestImages(temp_test, clustersWeights);
+            MessageBox.Show("Кластеры распределены");
         }
 
         private void DropDownList_SelectedIndexChanged(object sender, EventArgs e)
@@ -72,56 +73,56 @@ namespace MNIST_neuralnetwork
                 case "0":
                     int DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
-                    selectedDigits = MakeSelectedDigitArray(trainImages, DigitAsInt);
+                    selectedDigits = MakeSelectedDigitArray(testImages, DigitAsInt);
                     break;
                 case "1":
                     DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
-                    selectedDigits = MakeSelectedDigitArray(trainImages, DigitAsInt);
+                    selectedDigits = MakeSelectedDigitArray(testImages, DigitAsInt);
                     break;
                 case "2":
                     DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
-                    selectedDigits = MakeSelectedDigitArray(trainImages, DigitAsInt);
+                    selectedDigits = MakeSelectedDigitArray(testImages, DigitAsInt);
                     break ;
                 case "3":
                     DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit,digits);
-                    selectedDigits = MakeSelectedDigitArray(trainImages, DigitAsInt);
+                    selectedDigits = MakeSelectedDigitArray(testImages, DigitAsInt);
                     break;
                 case "4":
                     DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
-                    selectedDigits = MakeSelectedDigitArray(trainImages, DigitAsInt);
+                    selectedDigits = MakeSelectedDigitArray(testImages, DigitAsInt);
                     break;
                 case "5":
                     DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
-                    selectedDigits = MakeSelectedDigitArray(trainImages, DigitAsInt);
+                    selectedDigits = MakeSelectedDigitArray(testImages, DigitAsInt);
                     break;
                 case "6":
                     DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
-                    selectedDigits = MakeSelectedDigitArray(trainImages, DigitAsInt);
+                    selectedDigits = MakeSelectedDigitArray(testImages, DigitAsInt);
                     break;
                 case "7":
                     DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
-                    selectedDigits = MakeSelectedDigitArray(trainImages, DigitAsInt);
+                    selectedDigits = MakeSelectedDigitArray(testImages, DigitAsInt);
                     break;
                 case "8":
                     DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
-                    selectedDigits = MakeSelectedDigitArray(trainImages, DigitAsInt);
+                    selectedDigits = MakeSelectedDigitArray(testImages, DigitAsInt);
                     break;
                 case "9":
                     DigitAsInt = Int32.Parse(selectedDigit);
                     ShowSelectedDigit(selectedDigit, digits);
-                    selectedDigits = MakeSelectedDigitArray(trainImages, DigitAsInt);
+                    selectedDigits = MakeSelectedDigitArray(testImages, DigitAsInt);
                     break;
                 case "All images":
                     ShowSelectedDigit(selectedDigit, digits);
-                    selectedDigits = MakeSelectedDigitArray(trainImages, 10);
+                    selectedDigits = MakeSelectedDigitArray(testImages, 10);
                     break;
             }
         }
@@ -152,7 +153,7 @@ namespace MNIST_neuralnetwork
         {
             currentIndex = 0;
             SelectedDigits.Clear();
-            foreach (DigitImage digitImage in trainImages)
+            foreach (DigitImage digitImage in testImages)
             {
                 if (digitImage.label.ToString() == selectedDigit)
                 {
@@ -172,11 +173,11 @@ namespace MNIST_neuralnetwork
         public int[] GetCountsOfDigits() // метод для получения количества экземпляров каждой цифры
         {
             int[] digitCountInGroup = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            for (int i = 0; i < trainImages.Length; i++)
+            for (int i = 0; i < testImages.Length; i++)
             {
                 for (int j = 0; j < countOfDigits; j++)
                 {
-                    if (trainImages[i].label == j)
+                    if (testImages[i].label == j)
                     {
                         digitCountInGroup[j]++;
                     }
@@ -264,6 +265,22 @@ namespace MNIST_neuralnetwork
         {
             clustersCount = Int32.Parse(ClusterCountChoice.SelectedItem.ToString());
             DetectButton.Enabled = true;
+        }
+
+        private void kryptonButton1_Click(object sender, EventArgs e)
+        {
+            List<Bitmap> AllTestImages  = new List<Bitmap>();
+            DigitImage[] testImages = mnist_train.LoadData(10000, mnist_train.testPixelFile, mnist_train.testLabelFile, temp_test);
+            foreach (DigitImage digitImage in this.testImages)
+            {
+               
+                    Bitmap image = mnist_train.MakeBitmap(digitImage, 3);
+                    AllTestImages.Add(image);
+               
+            }
+            MNIST_PictureBox.Image = AllTestImages[currentIndex];
+
+
         }
     }
 }
