@@ -231,10 +231,10 @@ namespace MNIST_neuralnetwork
 
         // Метод для классификации тестовых изображений
 
-        public int[] ClassifyTestImages(int[,] testImages, double[,] clusterWeights)
+        public int[] ClassifyTestImages(int[,] testImages, double[,] clusterWeights, RichTextBox RtxtDebugOutput, PictureBox[]pb)
         {
             int maxClusters = clusterWeights.GetLength(0);
-            int[] classifications = new int[testImages.GetLength(0)]; // Длина массива равна числу строк в testImages
+            int[] nearestClustersArray = new int[testImages.GetLength(0)]; // массив ближайших кластеров к кажому изображению тестовой выборки, Длина массива равна числу строк в testImages
 
             for (int i = 0; i < testImages.GetLength(0); i++)
             {
@@ -243,31 +243,49 @@ namespace MNIST_neuralnetwork
                 {
                     imageVector[j] = testImages[i, j];
                 }
-
+               // int nearestCluster1 = MinimumDistanceIndex();
                 double minDistance = double.MaxValue;
                 int nearestCluster = -1;
 
                 // Находим ближайший кластер для текущего изображения
-                for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
+                for (int clusterIndex = 0; clusterIndex < pb.Length; clusterIndex++)
                 {
                     double[] clusterWeightsVector = new double[clusterWeights.GetLength(1)];
                     for (int k = 0; k < clusterWeights.GetLength(1); k++)
                     {
                         clusterWeightsVector[k] = clusterWeights[clusterIndex, k];
                     }
+                    
 
                     double distance = EuclideDistance(clusterWeightsVector, imageVector);
+                  //  RtxtDebugOutput.AppendText($"Cluster {clusterIndex}:, distance = {distance}\r\n");
                     if (distance < minDistance)
                     {
                         minDistance = distance;
                         nearestCluster = clusterIndex;
                     }
+                    
                 }
+                nearestClustersArray[i] = nearestCluster;
 
-                classifications[i] = nearestCluster;
+                // Отладочный вывод для проверки значений переменных
+              //  RtxtDebugOutput.AppendText($"After comparison: minDistance = {minDistance}, nearestCluster = {nearestCluster}\r\n");
+
             }
+            
+            string fileName = $"ClustersForTestMNIST_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}_{DateTime.Now.Hour}-{DateTime.Now.Minute}.txt";
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
 
-            return classifications;
+                //writer.Write(DateTime.Now + "\n");
+                for (int i = 0; i < testImages.GetLength(0) ; i++)
+                {
+
+                    writer.Write(i + " " + "-" + " " + nearestClustersArray[i] + "\n");
+                }
+                writer.WriteLine();
+            }
+            return nearestClustersArray;
         }
 
 

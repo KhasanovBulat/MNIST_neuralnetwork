@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NeuralNetworkForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.TestSetButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.InfoButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DetectButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DownlButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
@@ -42,7 +44,9 @@
             this.MNIST_PictureBox = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.kryptonButton1 = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.RtxtDebugOutput = new System.Windows.Forms.RichTextBox();
+            this.TestPictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -54,6 +58,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ClusterCountChoice)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DropDownList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MNIST_PictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TestPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -69,7 +74,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.flowLayoutPanel1);
-            this.splitContainer1.Size = new System.Drawing.Size(995, 441);
+            this.splitContainer1.Size = new System.Drawing.Size(995, 637);
             this.splitContainer1.SplitterDistance = 491;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -82,22 +87,33 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.kryptonButton1);
+            this.splitContainer2.Panel1.Controls.Add(this.TestSetButton);
             this.splitContainer2.Panel1.Controls.Add(this.InfoButton);
             this.splitContainer2.Panel1.Controls.Add(this.DetectButton);
             this.splitContainer2.Panel1.Controls.Add(this.DownlButton);
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.TestPictureBox);
+            this.splitContainer2.Panel2.Controls.Add(this.RtxtDebugOutput);
             this.splitContainer2.Panel2.Controls.Add(this.ClusterCountChoice);
             this.splitContainer2.Panel2.Controls.Add(this.ClustersCountChoiceLabel);
             this.splitContainer2.Panel2.Controls.Add(this.NextDigit);
             this.splitContainer2.Panel2.Controls.Add(this.PrevDigit);
             this.splitContainer2.Panel2.Controls.Add(this.DropDownList);
             this.splitContainer2.Panel2.Controls.Add(this.MNIST_PictureBox);
-            this.splitContainer2.Size = new System.Drawing.Size(491, 441);
-            this.splitContainer2.SplitterDistance = 58;
+            this.splitContainer2.Size = new System.Drawing.Size(491, 637);
+            this.splitContainer2.SplitterDistance = 78;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // TestSetButton
+            // 
+            this.TestSetButton.Location = new System.Drawing.Point(348, 12);
+            this.TestSetButton.Name = "TestSetButton";
+            this.TestSetButton.Size = new System.Drawing.Size(140, 32);
+            this.TestSetButton.TabIndex = 3;
+            this.TestSetButton.Values.Text = "Тестовая выборка";
+            this.TestSetButton.Click += new System.EventHandler(this.TestSetButton_Click);
             // 
             // InfoButton
             // 
@@ -208,7 +224,7 @@
             // 
             // MNIST_PictureBox
             // 
-            this.MNIST_PictureBox.Location = new System.Drawing.Point(47, 22);
+            this.MNIST_PictureBox.Location = new System.Drawing.Point(26, 22);
             this.MNIST_PictureBox.Name = "MNIST_PictureBox";
             this.MNIST_PictureBox.Size = new System.Drawing.Size(301, 262);
             this.MNIST_PictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -220,23 +236,38 @@
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(497, 435);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(494, 438);
             this.flowLayoutPanel1.TabIndex = 7;
             // 
-            // kryptonButton1
+            // contextMenuStrip1
             // 
-            this.kryptonButton1.Location = new System.Drawing.Point(348, 12);
-            this.kryptonButton1.Name = "kryptonButton1";
-            this.kryptonButton1.Size = new System.Drawing.Size(140, 32);
-            this.kryptonButton1.TabIndex = 3;
-            this.kryptonButton1.Values.Text = "Тестовая выборка";
-            this.kryptonButton1.Click += new System.EventHandler(this.kryptonButton1_Click);
+            this.contextMenuStrip1.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // RtxtDebugOutput
+            // 
+            this.RtxtDebugOutput.Location = new System.Drawing.Point(348, 22);
+            this.RtxtDebugOutput.Name = "RtxtDebugOutput";
+            this.RtxtDebugOutput.Size = new System.Drawing.Size(134, 262);
+            this.RtxtDebugOutput.TabIndex = 9;
+            this.RtxtDebugOutput.Text = "";
+            // 
+            // TestPictureBox
+            // 
+            this.TestPictureBox.Location = new System.Drawing.Point(19, 366);
+            this.TestPictureBox.Name = "TestPictureBox";
+            this.TestPictureBox.Size = new System.Drawing.Size(143, 142);
+            this.TestPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.TestPictureBox.TabIndex = 10;
+            this.TestPictureBox.TabStop = false;
             // 
             // NeuralNetworkForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(995, 441);
+            this.ClientSize = new System.Drawing.Size(995, 637);
             this.Controls.Add(this.splitContainer1);
             this.Name = "NeuralNetworkForm";
             this.Text = "NeuralNetworkForm";
@@ -253,6 +284,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ClusterCountChoice)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DropDownList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MNIST_PictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TestPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -273,7 +305,10 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox ClusterCountChoice;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private ComponentFactory.Krypton.Toolkit.KryptonButton kryptonButton1;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton TestSetButton;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.RichTextBox RtxtDebugOutput;
+        private System.Windows.Forms.PictureBox TestPictureBox;
     }
 }
 
