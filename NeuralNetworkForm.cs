@@ -36,7 +36,6 @@ namespace MNIST_neuralnetwork
             Images = mnist_train.LoadData(60000, mnist_train.PixelFile, mnist_train.LabelFile, temp_train);
            
             DigitsCountInGroup = GetCountsOfDigits();
-
             
             //testImages = mnist_train.LoadData(10000, mnist_train.testPixelFile, mnist_train.testLabelFile, temp_test);
             MessageBox.Show("База MNIST загружена.");
@@ -189,7 +188,7 @@ namespace MNIST_neuralnetwork
         }
 
 
-        public int[,] MakeSelectedDigitArray(DigitImage[] images, int selectedDigit)
+        public int[,] MakeSelectedDigitArray(DigitImage[] images, int selectedDigit) 
         {
             int count;
             if (selectedDigit == 10)
@@ -258,10 +257,7 @@ namespace MNIST_neuralnetwork
                 pictureBoxes[i] = pictureBox; // Добавляем пикчербокс в массив
             }
         }
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
+       
 
         private void ClusterCountChoice_SelectedIndexChanged(object sender, EventArgs e)
         {

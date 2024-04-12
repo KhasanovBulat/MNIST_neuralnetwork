@@ -16,9 +16,11 @@ namespace MNIST_neuralnetwork
         private Random random = new Random();
         int maxClusters;
         double[,] weights;
+        
 
         public KohonenNetwork()
         {
+            
             neurons = new List<Neuron>();
         }
 
@@ -86,12 +88,11 @@ namespace MNIST_neuralnetwork
             return winnerIndex;
         }
 
-            public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters)
-            {
+        public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters)
+        {
             int vectorSize = inputPixels.GetLength(1); // Размерность вектора (количество пикселей)
             weights = new double[maxClusters, vectorSize]; // Массив весов
 
-            
             // Инициализация весов
             for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
             {
@@ -101,8 +102,6 @@ namespace MNIST_neuralnetwork
                     weights[clusterIndex, i] = inputPixels[randomIndex, i]; // Взятие весов из случайного изображения
                 }
             }
-            
-            
 
             // ПОИСК НЕЙРОНА-ПОБЕДИТЕЛЯ
             do
@@ -114,7 +113,6 @@ namespace MNIST_neuralnetwork
                 {
                     inputVector[i] = inputPixels[randomIndex, i]; // Заполнение вектора пикселями
                 }
-
                     int winnerIndex = MinimumDistanceIndex(inputVector, maxClusters);
 
                     // ОБНОВЛЕНИЕ ВЕСОВ (переписать)
@@ -126,7 +124,6 @@ namespace MNIST_neuralnetwork
                         double weightChange = h * (inputVector[i] - weights[winnerIndex, i]);
                         // Обновление веса
                         weights[winnerIndex, i] += weightChange;
-                        
                     }
                 }
 
@@ -140,6 +137,7 @@ namespace MNIST_neuralnetwork
 
         private void SaveWeightsToFile(double[,] weights)
         {
+            //selectedDigit = NeuralNetworkForm.DropDownList.SelectedItem.ToString();
             DateTime dateTime = new DateTime();
             for (int i = 0; i < weights.GetLength(0); i++)
             {
@@ -157,7 +155,7 @@ namespace MNIST_neuralnetwork
             }
         }
 
-
+        // Метод, который отображает получившиеся веса кластеров
         public void GetClusterCenters(PictureBox[] pictureBoxes,  int maxClusters)
         {
             int width = 28;
@@ -187,10 +185,10 @@ namespace MNIST_neuralnetwork
                         // Преобразование значения пикселя в диапазон 0-255
                         byte invertedPixelValue = (byte)(255 - imagePixels[index]);
 
-                        bitmap.SetPixel(x, y, Color.FromArgb(invertedPixelValue, invertedPixelValue, invertedPixelValue));
+                        bitmap.SetPixel( y, x, Color.FromArgb(invertedPixelValue, invertedPixelValue, invertedPixelValue));
                     }
                 }
-                bitmap.RotateFlip(RotateFlipType.Rotate90FlipX);
+               
 
                 // Отображение изображения (необязательно)
                 if (pictureBoxIndex < pictureBoxes.Length)

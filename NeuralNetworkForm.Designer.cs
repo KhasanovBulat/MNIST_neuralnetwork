@@ -36,6 +36,7 @@
             this.InfoButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DetectButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DownlButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.RtxtDebugOutput = new System.Windows.Forms.RichTextBox();
             this.ClusterCountChoice = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.ClustersCountChoiceLabel = new System.Windows.Forms.Label();
             this.NextDigit = new System.Windows.Forms.Button();
@@ -45,8 +46,6 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.RtxtDebugOutput = new System.Windows.Forms.RichTextBox();
-            this.TestPictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -58,7 +57,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.ClusterCountChoice)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DropDownList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MNIST_PictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TestPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -94,7 +92,6 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.TestPictureBox);
             this.splitContainer2.Panel2.Controls.Add(this.RtxtDebugOutput);
             this.splitContainer2.Panel2.Controls.Add(this.ClusterCountChoice);
             this.splitContainer2.Panel2.Controls.Add(this.ClustersCountChoiceLabel);
@@ -141,6 +138,14 @@
             this.DownlButton.TabIndex = 0;
             this.DownlButton.Values.Text = "Загрузить";
             this.DownlButton.Click += new System.EventHandler(this.DownlButton_Click);
+            // 
+            // RtxtDebugOutput
+            // 
+            this.RtxtDebugOutput.Location = new System.Drawing.Point(348, 22);
+            this.RtxtDebugOutput.Name = "RtxtDebugOutput";
+            this.RtxtDebugOutput.Size = new System.Drawing.Size(134, 262);
+            this.RtxtDebugOutput.TabIndex = 9;
+            this.RtxtDebugOutput.Text = "";
             // 
             // ClusterCountChoice
             // 
@@ -236,7 +241,7 @@
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(494, 438);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(494, 622);
             this.flowLayoutPanel1.TabIndex = 7;
             // 
             // contextMenuStrip1
@@ -245,23 +250,6 @@
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
-            // RtxtDebugOutput
-            // 
-            this.RtxtDebugOutput.Location = new System.Drawing.Point(348, 22);
-            this.RtxtDebugOutput.Name = "RtxtDebugOutput";
-            this.RtxtDebugOutput.Size = new System.Drawing.Size(134, 262);
-            this.RtxtDebugOutput.TabIndex = 9;
-            this.RtxtDebugOutput.Text = "";
-            // 
-            // TestPictureBox
-            // 
-            this.TestPictureBox.Location = new System.Drawing.Point(19, 366);
-            this.TestPictureBox.Name = "TestPictureBox";
-            this.TestPictureBox.Size = new System.Drawing.Size(143, 142);
-            this.TestPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.TestPictureBox.TabIndex = 10;
-            this.TestPictureBox.TabStop = false;
             // 
             // NeuralNetworkForm
             // 
@@ -284,7 +272,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.ClusterCountChoice)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DropDownList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MNIST_PictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TestPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -298,7 +285,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonButton DetectButton;
         private ComponentFactory.Krypton.Toolkit.KryptonButton DownlButton;
         private System.Windows.Forms.PictureBox MNIST_PictureBox;
-        private ComponentFactory.Krypton.Toolkit.KryptonComboBox DropDownList;
+        public ComponentFactory.Krypton.Toolkit.KryptonComboBox DropDownList;
         private System.Windows.Forms.Button NextDigit;
         private System.Windows.Forms.Button PrevDigit;
         private System.Windows.Forms.Label ClustersCountChoiceLabel;
@@ -308,7 +295,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonButton TestSetButton;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.RichTextBox RtxtDebugOutput;
-        private System.Windows.Forms.PictureBox TestPictureBox;
     }
 }
 
