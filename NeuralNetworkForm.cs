@@ -20,7 +20,8 @@ namespace MNIST_neuralnetwork
         List<Bitmap> digits = new List<Bitmap>(); // список, в котором цифры хранятся по коллекциям в формате Bitmap
         int countOfDigits = 10; // количество цифр
         int[] DigitsCountInGroup; // массив, в котором хранятся количество цифрв в каждом классе цифр от 0 до 9
-        int[,] selectedDigits;
+        int[,] selectedDigits; // массив конкретно выбранной цифры в количестве образцов выбранной цифры и размерности изображения
+        string selectedDigit;
         int clustersCount;
         private PictureBox[] pictureBoxes; //PictureBox'ы, которые динамически создаются и в которых отображаются центры кластеров
 
@@ -33,11 +34,9 @@ namespace MNIST_neuralnetwork
 
         private void DownlButton_Click(object sender, EventArgs e)
         {
-            Images = mnist_train.LoadData(60000, mnist_train.PixelFile, mnist_train.LabelFile, temp_train);
-           
+            Images = mnist_train.LoadData(60000, mnist_train.PixelFile, mnist_train.LabelFile, temp_train); //загрузка обучающей выборки
             DigitsCountInGroup = GetCountsOfDigits();
-            
-            //testImages = mnist_train.LoadData(10000, mnist_train.testPixelFile, mnist_train.testLabelFile, temp_test);
+            testImages = mnist_train.LoadData(10000, mnist_train.testPixelFile, mnist_train.testLabelFile, temp_test); //загрузка тестовой выборки
             MessageBox.Show("База MNIST загружена.");
 
             DownlButton.Enabled = false;
@@ -54,18 +53,20 @@ namespace MNIST_neuralnetwork
         private void DetectButton_Click(object sender, EventArgs e)
         {
             
-            kohonenNet.Train(selectedDigits,0.96,0.01, 0.6, clustersCount);
+            kohonenNet.Train(selectedDigits,0.96,0.01, 0.6, clustersCount, selectedDigit);
             CreatePictureBoxes(clustersCount);
             kohonenNet.GetClusterCenters(pictureBoxes, clustersCount);
             string FolderPath = Environment.CurrentDirectory;
-            double[,] clustersWeights = kohonenNet.LoadClusterWeights(FolderPath, clustersCount);
-            int[] clustersClassification = kohonenNet.ClassifyTestImages(temp_test, clustersWeights, RtxtDebugOutput, pictureBoxes);
+            
+            //double[,] clustersWeights = kohonenNet.LoadClusterWeights(FolderPath, clustersCount);
+            //kohonenNet.TestKohonenNetwork(temp_test, clustersWeights);
+            //int[] clustersClassification = kohonenNet.ClassifyTestImages(temp_test, clustersWeights, RtxtDebugOutput, pictureBoxes);
             MessageBox.Show("Кластеры распределены");
         }
 
         private void DropDownList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedDigit = DropDownList.SelectedItem.ToString();
+            selectedDigit = DropDownList.SelectedItem.ToString();
             //int DigitAsInt = Int32.Parse(selectedDigit);
 
 
@@ -159,7 +160,7 @@ namespace MNIST_neuralnetwork
                 if (digitImage.label.ToString() == selectedDigit)
                 {
                     Bitmap image = mnist_train.MakeBitmap(digitImage, 3);
-                    SelectedDigits.Add(image);
+                    SelectedDigits.Add(image); 
                 }
                 else if (selectedDigit == "All images")
                 {
@@ -270,17 +271,15 @@ namespace MNIST_neuralnetwork
             currentIndex = 0;
             digits.Clear();
             List<Bitmap> AllTestImages  = new List<Bitmap>();
-            testImages = mnist_test.LoadData(10000, mnist_test.testPixelFile, mnist_test.testLabelFile, temp_test);
+            //testImages = mnist_test.LoadData(10000, mnist_test.testPixelFile, mnist_test.testLabelFile, temp_test);
             foreach (DigitImage digitImage in testImages)
             {
-               
                     Bitmap image = mnist_test.MakeBitmap(digitImage, 3);
                     digits.Add(image);
-
             }
             MNIST_PictureBox.Image = digits[currentIndex];
 
-
+            kohonenNet.RecognitionAccuracy(testImages, temp_test);
         }
     }
 }

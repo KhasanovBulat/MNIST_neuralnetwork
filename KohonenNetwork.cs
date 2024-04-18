@@ -16,11 +16,11 @@ namespace MNIST_neuralnetwork
         private Random random = new Random();
         int maxClusters;
         double[,] weights;
-        
+
 
         public KohonenNetwork()
         {
-            
+
             neurons = new List<Neuron>();
         }
 
@@ -88,7 +88,7 @@ namespace MNIST_neuralnetwork
             return winnerIndex;
         }
 
-        public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters)
+        public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters, string selectedDigit)
         {
             int vectorSize = inputPixels.GetLength(1); // Размерность вектора (количество пикселей)
             weights = new double[maxClusters, vectorSize]; // Массив весов
@@ -113,10 +113,10 @@ namespace MNIST_neuralnetwork
                 {
                     inputVector[i] = inputPixels[randomIndex, i]; // Заполнение вектора пикселями
                 }
-                    int winnerIndex = MinimumDistanceIndex(inputVector, maxClusters);
+                int winnerIndex = MinimumDistanceIndex(inputVector, maxClusters);
 
-                    // ОБНОВЛЕНИЕ ВЕСОВ (переписать)
-                    if (winnerIndex != -1)
+                // ОБНОВЛЕНИЕ ВЕСОВ (переписать)
+                if (winnerIndex != -1)
                 {
                     for (int i = 0; i < vectorSize; i++)
                     {
@@ -130,21 +130,21 @@ namespace MNIST_neuralnetwork
                 // Обновляем скорость обучения
                 h *= decayRate;
             } while (h > min_h);
-            SaveWeightsToFile(weights);
+            SaveWeightsToFile(weights, selectedDigit);
         }
 
 
 
-        private void SaveWeightsToFile(double[,] weights)
+        private void SaveWeightsToFile(double[,] weights, string selectedDigit)
         {
             //selectedDigit = NeuralNetworkForm.DropDownList.SelectedItem.ToString();
             DateTime dateTime = new DateTime();
             for (int i = 0; i < weights.GetLength(0); i++)
             {
-                string fileName = $"weights_digit_{i}_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}_{DateTime.Now.Hour}-{DateTime.Now.Minute}.txt";
+                string fileName = $"weights_{selectedDigit}_{i}.txt";
                 using (StreamWriter writer = new StreamWriter(fileName))
                 {
-                    
+
                     //writer.Write(DateTime.Now + "\n");
                     for (int j = 0; j < weights.GetLength(1); j++)
                     {
@@ -156,7 +156,7 @@ namespace MNIST_neuralnetwork
         }
 
         // Метод, который отображает получившиеся веса кластеров
-        public void GetClusterCenters(PictureBox[] pictureBoxes,  int maxClusters)
+        public void GetClusterCenters(PictureBox[] pictureBoxes, int maxClusters)
         {
             int width = 28;
             int height = 28;
@@ -185,10 +185,10 @@ namespace MNIST_neuralnetwork
                         // Преобразование значения пикселя в диапазон 0-255
                         byte invertedPixelValue = (byte)(255 - imagePixels[index]);
 
-                        bitmap.SetPixel( y, x, Color.FromArgb(invertedPixelValue, invertedPixelValue, invertedPixelValue));
+                        bitmap.SetPixel(y, x, Color.FromArgb(invertedPixelValue, invertedPixelValue, invertedPixelValue));
                     }
                 }
-               
+
 
                 // Отображение изображения (необязательно)
                 if (pictureBoxIndex < pictureBoxes.Length)
@@ -202,13 +202,13 @@ namespace MNIST_neuralnetwork
 
 
         // Метод для загрузки весов кластеров из файлов
-        public double[,] LoadClusterWeights(string folderPath, int maxClusters)
+        public double[,] LoadClusterWeights(string folderPath, int maxClusters, string selectedDigit)
         {
-           double[,] weights_clust = new double[maxClusters, 784]; // Предполагается, что размерность весов 784 (по количеству пикселей)
+            double[,] weights_clust = new double[maxClusters, 784]; // Предполагается, что размерность весов 784 (по количеству пикселей)
 
             for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
             {
-                string filePath = Path.Combine(folderPath, $"weights_digit_{clusterIndex}_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}_{DateTime.Now.Hour}-{DateTime.Now.Minute}.txt");
+                string filePath = Path.Combine(folderPath, $"weights_{selectedDigit}_{clusterIndex}_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}_{DateTime.Now.Hour}-{DateTime.Now.Minute}.txt");
                 if (File.Exists(filePath))
                 {
                     string[] lines = File.ReadAllLines(filePath);
@@ -226,65 +226,218 @@ namespace MNIST_neuralnetwork
             return weights_clust;
         }
 
-
-        // Метод для классификации тестовых изображений
-
-        public int[] ClassifyTestImages(int[,] testImages, double[,] clusterWeights, RichTextBox RtxtDebugOutput, PictureBox[]pb)
+        public int[] TestKohonenNetwork(int[,] testImages)
         {
-            int maxClusters = clusterWeights.GetLength(0);
-            int[] nearestClustersArray = new int[testImages.GetLength(0)]; // массив ближайших кластеров к кажому изображению тестовой выборки, Длина массива равна числу строк в testImages
-
+            int numClusters = 10;
+            int numDigits = 10;
+            double[] distances = new double[numClusters * numDigits];
+            int[] recognitionResults = new int[testImages.GetLength(0)];
             for (int i = 0; i < testImages.GetLength(0); i++)
             {
-                double[] imageVector = new double[testImages.GetLength(1)];
+                double[] testImagesVector = new double[testImages.GetLength(1)];
                 for (int j = 0; j < testImages.GetLength(1); j++)
                 {
-                    imageVector[j] = testImages[i, j];
+                    testImagesVector[j] = testImages[i, j];
                 }
-               // int nearestCluster1 = MinimumDistanceIndex();
-                double minDistance = double.MaxValue;
-                int nearestCluster = -1;
-
-                // Находим ближайший кластер для текущего изображения
-                for (int clusterIndex = 0; clusterIndex < pb.Length; clusterIndex++)
+                for (int digit = 0; digit < numDigits; digit++)
                 {
-                    double[] clusterWeightsVector = new double[clusterWeights.GetLength(1)];
-                    for (int k = 0; k < clusterWeights.GetLength(1); k++)
+                    for (int clusterIndex = 0; clusterIndex < numClusters; clusterIndex++)
                     {
-                        clusterWeightsVector[k] = clusterWeights[clusterIndex, k];
+                        string weightsFileName = $"weights_{digit}_{clusterIndex}.txt";
+                        string[] lines = File.ReadAllLines(weightsFileName);
+                        double[] weights = new double[lines.Length];
+                        string[] weightsString = lines[0].Split(' '); // Разделение строки на отдельные числа
+                        for (int k = 0; k < lines.Length; i++)
+                        {
+                            weights[k] = double.Parse(weightsString[k]);
+                        }
+                        distances[digit * numClusters + clusterIndex] = EuclideDistance(weights, testImagesVector);
                     }
-                    
-
-                    double distance = EuclideDistance(clusterWeightsVector, imageVector);
-                  //  RtxtDebugOutput.AppendText($"Cluster {clusterIndex}:, distance = {distance}\r\n");
-                    if (distance < minDistance)
-                    {
-                        minDistance = distance;
-                        nearestCluster = clusterIndex;
-                    }
-                    
                 }
-                nearestClustersArray[i] = nearestCluster;
+                double minDistance = distances[0];
+                int recognizedDigit = 0;
+                for (int index = 1; index < distances.Length; index++)
+                {
+                    if (distances[index] < minDistance)
+                    {
+                        minDistance = distances[index];
+                        recognizedDigit = index / numClusters; // Integer division gives the digit index
+                    }
+                }
 
-                // Отладочный вывод для проверки значений переменных
-              //  RtxtDebugOutput.AppendText($"After comparison: minDistance = {minDistance}, nearestCluster = {nearestCluster}\r\n");
+                recognitionResults[i] = recognizedDigit;
+            }
+
+            return recognitionResults;
+        }
+
+        public void RecognitionAccuracy(DigitImage[] testImages, int[,] test)
+        {
+            int numCorrectlyRecognized = 0;
+            int[] numCorrectlyRecognizedPerDigit = new int[10];
+            int[] totalPerDigit = new int[10];
+
+            int[] recognitionResults = TestKohonenNetwork(test); // Получаем результаты распознавания
+
+            // Сравниваем результаты с метками изображений
+            for (int i = 0; i < testImages.Length; i++)
+            {
+                int recognizedDigit = recognitionResults[i];
+                int actualDigit = testImages[i].label;
+                totalPerDigit[actualDigit]++;
+
+                if (recognizedDigit == actualDigit)
+                {
+                    numCorrectlyRecognized++;
+                    numCorrectlyRecognizedPerDigit[actualDigit]++;
+                }
+            }
+            string fileName = $"accuracy.txt";
+            // Вычисляем процент правильных распознаваний для каждой цифры
+            for (int digit = 0; digit < 10; digit++)
+            {
+                double accuracy = (double)numCorrectlyRecognizedPerDigit[digit] / totalPerDigit[digit] * 100;
+
+                using (StreamWriter writer = new StreamWriter(fileName))
+                {
+                    writer.Write($"Для цифры {digit}: {accuracy:F2}% правильно распознано из {totalPerDigit[digit]} изображений.");
+                    writer.WriteLine();
+                }
+
 
             }
-            
-            string fileName = $"ClustersForTestMNIST_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}_{DateTime.Now.Hour}-{DateTime.Now.Minute}.txt";
+
+            // Общий процент правильных распознаваний
+            double overallAccuracy = (double)numCorrectlyRecognized / testImages.Length * 100;
             using (StreamWriter writer = new StreamWriter(fileName))
             {
-
-                //writer.Write(DateTime.Now + "\n");
-                for (int i = 0; i < testImages.GetLength(0) ; i++)
-                {
-
-                    writer.Write(i + " " + "-" + " " + nearestClustersArray[i] + "\n");
-                }
+                writer.Write($"Общий процент правильных распознаваний: {overallAccuracy:F2}%.");
                 writer.WriteLine();
             }
-            return nearestClustersArray;
+
+
+
         }
+        // Метод для классификации тестовых изображений
+        //public int[] ClassifyTestImages(int[,] testImages, double[,] clusterWeights, RichTextBox RtxtDebugOutput, PictureBox[]pb)
+        //{
+        //    int maxClusters = clusterWeights.GetLength(0);
+        //    int[] nearestClustersArray = new int[testImages.GetLength(0)]; // массив ближайших кластеров к кажому изображению тестовой выборки, Длина массива равна числу строк в testImages
+
+        //    for (int i = 0; i < testImages.GetLength(0); i++)
+        //    {
+        //        double[] imageVector = new double[testImages.GetLength(1)];
+        //        for (int j = 0; j < testImages.GetLength(1); j++)
+        //        {
+        //            imageVector[j] = testImages[i, j];
+        //        }
+        //       // int nearestCluster1 = MinimumDistanceIndex();
+        //        double minDistance = double.MaxValue;
+        //        int nearestCluster = -1;
+
+        //        // Находим ближайший кластер для текущего изображения
+        //        for (int clusterIndex = 0; clusterIndex < pb.Length; clusterIndex++)
+        //        {
+        //            double[] clusterWeightsVector = new double[clusterWeights.GetLength(1)];
+        //            for (int k = 0; k < clusterWeights.GetLength(1); k++)
+        //            {
+        //                clusterWeightsVector[k] = clusterWeights[clusterIndex, k];
+        //            }
+
+
+        //            double distance = EuclideDistance(clusterWeightsVector, imageVector);
+        //          //  RtxtDebugOutput.AppendText($"Cluster {clusterIndex}:, distance = {distance}\r\n");
+        //            if (distance < minDistance)
+        //            {
+        //                minDistance = distance;
+        //                nearestCluster = clusterIndex;
+        //            }
+
+        //        }
+        //        nearestClustersArray[i] = nearestCluster;
+
+        //        // Отладочный вывод для проверки значений переменных
+        //      //  RtxtDebugOutput.AppendText($"After comparison: minDistance = {minDistance}, nearestCluster = {nearestCluster}\r\n");
+
+        //    }
+
+        //    string fileName = $"ClustersForTestMNIST_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}_{DateTime.Now.Hour}-{DateTime.Now.Minute}.txt";
+        //    using (StreamWriter writer = new StreamWriter(fileName))
+        //    {
+
+        //        //writer.Write(DateTime.Now + "\n");
+        //        for (int i = 0; i < testImages.GetLength(0) ; i++)
+        //        {
+
+        //            writer.Write(i + " " + "-" + " " + nearestClustersArray[i] + "\n");
+        //        }
+        //        writer.WriteLine();
+        //    }
+        //    return nearestClustersArray;
+        //}
+
+        //public void TestKohonenNetwork(string testImagesFolderPath, string weightsFolderPath, int maxClusters, int[,] testImages)
+        //{
+        //    // Загрузка тестовой выборки
+
+        //    // Словарь для хранения результатов тестирования
+        //    Dictionary<int, double> accuracyResults = new Dictionary<int, double>();
+
+        //    // Цикл по всем цифрам от 0 до 9
+        //    for (int digit = 0; digit <= 9; digit++)
+        //    {
+        //        // Загрузка весов кластеров для текущей цифры
+        //        double[,] clustersWeights = LoadClusterWeights(weightsFolderPath, maxClusters, digit.ToString());
+
+        //        // Счетчик правильно распознанных изображений
+        //        int correctCount = 0;
+
+        //        // Цикл по всем изображениям тестовой выборки
+        //        foreach (var image in testImages)
+        //        {
+        //            double[] imageVector = new double[testImages.GetLength(1)];
+        //            for (int j = 0; j < testImages.GetLength(1); j++)
+        //            {
+        //                imageVector[j] = testImages[i, j];
+        //            }
+        //            double[] clusterWeightsVector = new double[clustersWeights.GetLength(1)];
+        //            for (int k = 0; k < clustersWeights.GetLength(1); k++)
+        //            {
+        //                clusterWeightsVector[k] = clustersWeights[clusterIndex, k];
+        //            }
+
+        //            // Поиск кластера с минимальным расстоянием до изображения
+        //            double minDistance = double.MaxValue;
+        //                int closestCluster = -1;
+        //                for (int i = 0; i < maxClusters; i++)
+        //                {
+        //                    double distance = EuclideDistance(clustersWeights, imageVector);
+        //                    if (distance < minDistance)
+        //                    {
+        //                        minDistance = distance;
+        //                        closestCluster = i;
+        //                    }
+        //                }
+
+        //                // Если ближайший кластер соответствует текущей цифре, увеличиваем счетчик
+        //                if (closestCluster == digit)
+        //                {
+        //                    correctCount++;
+        //                }
+
+        //        }
+
+        //        // Расчет процента правильно распознанных изображений
+        //        double accuracy = (double)correctCount / testImages.Count(image => image.label == digit) * 100;
+        //        accuracyResults.Add(digit, accuracy);
+        //    }
+
+        //    // Вывод результатов тестирования
+        //    foreach (var result in accuracyResults)
+        //    {
+        //        Console.WriteLine($"Цифра {result.Key}: {result.Value}% изображений содержится в нужном кластере");
+        //    }
+        //}
 
 
 
