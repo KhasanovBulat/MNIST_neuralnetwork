@@ -138,7 +138,7 @@ namespace MNIST_neuralnetwork
         private void SaveWeightsToFile(double[,] weights, string selectedDigit)
         {
             //selectedDigit = NeuralNetworkForm.DropDownList.SelectedItem.ToString();
-            DateTime dateTime = new DateTime();
+            
             for (int i = 0; i < weights.GetLength(0); i++)
             {
                 string fileName = $"weights_{selectedDigit}_{i}.txt";
@@ -245,9 +245,9 @@ namespace MNIST_neuralnetwork
                     {
                         string weightsFileName = $"weights_{digit}_{clusterIndex}.txt";
                         string[] lines = File.ReadAllLines(weightsFileName);
-                        double[] weights = new double[lines.Length];
+                        double[] weights = new double[784];
                         string[] weightsString = lines[0].Split(' '); // Разделение строки на отдельные числа
-                        for (int k = 0; k < lines.Length; i++)
+                        for (int k = 0; k < weights.Length; k++)
                         {
                             weights[k] = double.Parse(weightsString[k]);
                         }
@@ -276,46 +276,48 @@ namespace MNIST_neuralnetwork
             int numCorrectlyRecognized = 0;
             int[] numCorrectlyRecognizedPerDigit = new int[10];
             int[] totalPerDigit = new int[10];
-
+            DateTime dateTime = new DateTime();
             int[] recognitionResults = TestKohonenNetwork(test); // Получаем результаты распознавания
-
-            // Сравниваем результаты с метками изображений
-            for (int i = 0; i < testImages.Length; i++)
+            string file_Result = $"Recognition_Result_{dateTime.Hour}_{dateTime.Minute}.txt";
+            using (StreamWriter writer = new StreamWriter(file_Result))
             {
-                int recognizedDigit = recognitionResults[i];
-                int actualDigit = testImages[i].label;
-                totalPerDigit[actualDigit]++;
+                
 
-                if (recognizedDigit == actualDigit)
+                // Сравниваем результаты с метками изображений
+                for (int i = 0; i < testImages.Length; i++)
                 {
-                    numCorrectlyRecognized++;
-                    numCorrectlyRecognizedPerDigit[actualDigit]++;
+                    int recognizedDigit = recognitionResults[i];
+                    int actualDigit = testImages[i].label;
+                    totalPerDigit[actualDigit]++;
+
+                    if (recognizedDigit == actualDigit)
+                    {
+                        numCorrectlyRecognized++;
+                        numCorrectlyRecognizedPerDigit[actualDigit]++;
+                    }
+                    writer.Write($"{i}: {recognitionResults[i]}\n");
                 }
             }
-            string fileName = $"accuracy.txt";
+            string fileName = $"accuracy_{dateTime.Hour}_{dateTime.Minute}.txt";
             // Вычисляем процент правильных распознаваний для каждой цифры
-            for (int digit = 0; digit < 10; digit++)
-            {
-                double accuracy = (double)numCorrectlyRecognizedPerDigit[digit] / totalPerDigit[digit] * 100;
-
-                using (StreamWriter writer = new StreamWriter(fileName))
-                {
-                    writer.Write($"Для цифры {digit}: {accuracy:F2}% правильно распознано из {totalPerDigit[digit]} изображений.");
-                    writer.WriteLine();
-                }
-
-
-            }
-
-            // Общий процент правильных распознаваний
-            double overallAccuracy = (double)numCorrectlyRecognized / testImages.Length * 100;
             using (StreamWriter writer = new StreamWriter(fileName))
             {
+                for (int digit = 0; digit < 10; digit++)
+                {
+                double accuracy = (double)numCorrectlyRecognizedPerDigit[digit] / totalPerDigit[digit] * 100;
+                
+              
+                    writer.Write($"Для цифры {digit}: {accuracy:F2}% правильно распознано из {totalPerDigit[digit]} изображений.");
+                    
+
+                    writer.WriteLine();
+                }
+                double overallAccuracy = (double)numCorrectlyRecognized / testImages.Length * 100;
                 writer.Write($"Общий процент правильных распознаваний: {overallAccuracy:F2}%.");
-                writer.WriteLine();
+
             }
 
-
+           
 
         }
         // Метод для классификации тестовых изображений
