@@ -280,6 +280,11 @@ namespace MNIST_neuralnetwork
             MNIST_PictureBox.Image = digits[currentIndex];
 
             kohonenNet.RecognitionAccuracy(testImages, temp_test);
+            string inputFilePath = "weights_0_0.txt";
+            string outputFilePath = "formatted_weights.txt";
+            kohonenNet.FormatWeightsFile(inputFilePath, outputFilePath);
         }
+
+        
     }
 }
