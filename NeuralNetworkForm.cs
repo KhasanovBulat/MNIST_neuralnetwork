@@ -15,6 +15,7 @@ namespace MNIST_neuralnetwork
         int[,] temp_test = new int[10000, 28 * 28]; // Создаем временный массив для хранения пикселей тестовой выборки
         public int currentIndex = 0; // индекс текущего к показу изображения
         public KohonenNetwork kohonenNet = new KohonenNetwork();
+        public HopfieldNetwork hopfieldNet = new HopfieldNetwork(100,784);
         MNIST mnist_train = new MNIST(20, 10000, 784);
         MNIST mnist_test = new MNIST(20, 10000, 784);
         List<Bitmap> digits = new List<Bitmap>(); // список, в котором цифры хранятся по коллекциям в формате Bitmap
@@ -23,6 +24,7 @@ namespace MNIST_neuralnetwork
         int[,] selectedDigits; // массив конкретно выбранной цифры в количестве образцов выбранной цифры и размерности изображения
         string selectedDigit;
         int clustersCount;
+        string FolderPath = Environment.CurrentDirectory;
         private PictureBox[] pictureBoxes; //PictureBox'ы, которые динамически создаются и в которых отображаются центры кластеров
 
         public NeuralNetworkForm()
@@ -40,6 +42,7 @@ namespace MNIST_neuralnetwork
             MessageBox.Show("База MNIST загружена.");
 
             DownlButton.Enabled = false;
+            HopfieldNetButton.Enabled = true;
         }
 
         private void InfoButton_Click(object sender, EventArgs e)
@@ -56,8 +59,8 @@ namespace MNIST_neuralnetwork
             kohonenNet.Train(selectedDigits,0.96,0.01, 0.6, clustersCount, selectedDigit);
             CreatePictureBoxes(clustersCount);
             kohonenNet.GetClusterCenters(pictureBoxes, clustersCount);
-            string FolderPath = Environment.CurrentDirectory;
             
+            //kohonenNet.FormatClusters(FolderPath, FolderPath);
             //double[,] clustersWeights = kohonenNet.LoadClusterWeights(FolderPath, clustersCount);
             //kohonenNet.TestKohonenNetwork(temp_test, clustersWeights);
             //int[] clustersClassification = kohonenNet.ClassifyTestImages(temp_test, clustersWeights, RtxtDebugOutput, pictureBoxes);
@@ -279,12 +282,22 @@ namespace MNIST_neuralnetwork
             }
             MNIST_PictureBox.Image = digits[currentIndex];
 
-            kohonenNet.RecognitionAccuracy(testImages, temp_test);
             string inputFilePath = "weights_0_0.txt";
             string outputFilePath = "formatted_weights.txt";
-            kohonenNet.FormatWeightsFile(inputFilePath, outputFilePath);
+            kohonenNet.FormatClusters(Environment.CurrentDirectory, Environment.CurrentDirectory);
+            kohonenNet.RecognitionAccuracy(testImages, temp_test);
+            kohonenNet.GenerateConfusionMatrix(testImages, temp_test,outputFilePath );
         }
 
-        
+        private void HopfieldNetButton_Click(object sender, EventArgs e)
+        {
+            int[,] preprocessedData = hopfieldNet.PreprocessData(temp_train);
+            hopfieldNet.CreateW(preprocessedData);
+            int[,] processedTestData = hopfieldNet.PreprocessData(temp_test);   
+            int[,] recoverd = hopfieldNet.Recall(processedTestData, 200);
+            hopfieldNet.DisplayAndSaveImages(recoverd,"HopfieldTestImg");
+            //double accuracies = hopfieldNet.CompareRecoveryAccuracy(proccesed)
+
+        }
     }
 }

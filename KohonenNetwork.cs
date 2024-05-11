@@ -87,51 +87,306 @@ namespace MNIST_neuralnetwork
 
             return winnerIndex;
         }
+        //public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters, string selectedDigit)
+        //{
+        //    int vectorSize = inputPixels.GetLength(1);
+        //    weights = new double[maxClusters, vectorSize];
+        //    Random random = new Random();
 
+        //    // Инициализация весов случайным образом
+        //    for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
+        //    {
+        //        int randomIndex = random.Next(0, inputPixels.GetLength(0));
+        //        for (int i = 0; i < vectorSize; i++)
+        //        {
+        //            weights[clusterIndex, i] = inputPixels[randomIndex, i];
+        //        }
+        //    }
+
+        //    int neighborhoodSize = maxClusters / 10; // Примерное определение размера соседства
+
+        //    // Обучение с учетом соседства
+        //    do
+        //    {
+        //        int randomIndex = random.Next(0, inputPixels.GetLength(0));
+        //        double[] inputVector = new double[vectorSize];
+        //        for (int i = 0; i < vectorSize; i++)
+        //        {
+        //            inputVector[i] = inputPixels[randomIndex, i];
+        //        }
+
+        //        int winnerIndex = MinimumDistanceIndex(inputVector, maxClusters);
+        //        if (winnerIndex != -1)
+        //        {
+        //            // Обновление весов победителя и его соседей
+        //            int start = Math.Max(0, winnerIndex - neighborhoodSize);
+        //            int end = Math.Min(maxClusters - 1, winnerIndex + neighborhoodSize);
+
+        //            for (int j = start; j <= end; j++)
+        //            {
+        //                double influence = Math.Exp(-Math.Pow(j - winnerIndex, 2) / (2 * neighborhoodSize * neighborhoodSize));
+        //                for (int i = 0; i < vectorSize; i++)
+        //                {
+        //                    weights[j, i] += influence * h * (inputVector[i] - weights[j, i]);
+        //                }
+        //            }
+        //        }
+
+        //        // Уменьшение коэффициента обучения и размера соседства
+        //        h *= decayRate;
+        //        neighborhoodSize = (int)(neighborhoodSize * decayRate);
+        //    } while (h > min_h);
+        //    SaveWeightsToFile(weights, selectedDigit);
+        //}
+        //public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters, string selectedDigit)
+        //{
+        //    int vectorSize = inputPixels.GetLength(1);
+        //    int examplesNumber = inputPixels.GetLength(0);
+        //    double[,] updatedWinnerWeights = new double[maxClusters, vectorSize];
+        //    weights = new double[examplesNumber, vectorSize];
+
+        //    List<int> uniqueWinners = new List<int>(); // Использование List для отслеживания индексов победителей
+
+        //    Random random = new Random();
+        //    for (int exampleIndex = 0; exampleIndex < examplesNumber; exampleIndex++)
+        //    {
+        //        int randomIndex = random.Next(0, inputPixels.GetLength(0));
+        //        for (int i = 0; i < vectorSize; i++)
+        //        {
+        //            weights[exampleIndex, i] = inputPixels[randomIndex, i];
+        //        }
+        //    }
+
+        //    do
+        //    {
+        //        int randomIndex = random.Next(0, inputPixels.GetLength(0));
+        //        double[] inputVector = new double[vectorSize];
+        //        for (int i = 0; i < vectorSize; i++)
+        //        {
+        //            inputVector[i] = inputPixels[randomIndex, i];
+        //        }
+        //        int winnerIndex = MinimumDistanceIndex(inputVector, maxClusters);
+
+        //        if (winnerIndex != -1)
+        //        {
+        //            if (!uniqueWinners.Contains(winnerIndex) && uniqueWinners.Count < maxClusters)
+        //            {
+        //                uniqueWinners.Add(winnerIndex); // Добавление нового уникального победителя
+        //            }
+
+        //            for (int i = 0; i < vectorSize; i++)
+        //            {
+        //                double weightChange = h * (inputVector[i] - weights[winnerIndex, i]);
+        //                weights[winnerIndex, i] += weightChange;
+
+        //                // Обновляем веса в updatedWinnerWeights для уникальных победителей
+        //                if (uniqueWinners.IndexOf(winnerIndex) < maxClusters)
+        //                {
+        //                    updatedWinnerWeights[uniqueWinners.IndexOf(winnerIndex), i] = weights[winnerIndex, i];
+        //                }
+        //            }
+        //        }
+
+        //        h *= decayRate; // Обновление скорости обучения
+        //    } while (h > min_h);
+
+        //    SaveWeightsToFile(updatedWinnerWeights, selectedDigit);
+        //}
         public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters, string selectedDigit)
         {
-            int vectorSize = inputPixels.GetLength(1); // Размерность вектора (количество пикселей)
-            weights = new double[maxClusters, vectorSize]; // Массив весов
+            int vectorSize = inputPixels.GetLength(1);
+            int examplesNumber = inputPixels.GetLength(0);
+            InitializeWeights(maxClusters, vectorSize, examplesNumber);
 
-            // Инициализация весов
-            for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
-            {
-                int randomIndex = random.Next(0, inputPixels.GetLength(0)); // Случайный индекс изображения
-                for (int i = 0; i < vectorSize; i++)
-                {
-                    weights[clusterIndex, i] = inputPixels[randomIndex, i]; // Взятие весов из случайного изображения
-                }
-            }
-
-            // ПОИСК НЕЙРОНА-ПОБЕДИТЕЛЯ
             do
             {
-                int randomIndex = new Random().Next(0, inputPixels.GetLength(0)); // Случайный индекс изображения
-                double[] inputVector = new double[vectorSize]; // Вектор входных данных (пиксели изображения) - обучающая выборка
-
-                for (int i = 0; i < vectorSize; i++)
+                for (int exampleIndex = 0; exampleIndex < examplesNumber; exampleIndex++)
                 {
-                    inputVector[i] = inputPixels[randomIndex, i]; // Заполнение вектора пикселями
+                    double[] distances = CalculateDistances(inputPixels, exampleIndex, maxClusters, vectorSize);
+                    int winnerIndex = FindWinner(distances);
+                    UpdateWeights(winnerIndex, h, inputPixels, exampleIndex, vectorSize);
                 }
-                int winnerIndex = MinimumDistanceIndex(inputVector, maxClusters);
+                h = UpdateLearningRate(h, decayRate);
+            } while (h > min_h);
 
-                // ОБНОВЛЕНИЕ ВЕСОВ (переписать)
-                if (winnerIndex != -1)
+            SaveWeightsToFile(weights, selectedDigit);
+        }
+
+        private void InitializeWeights(int maxClusters, int vectorSize, int examplesNumber)
+        {
+            weights = new double[maxClusters, vectorSize];
+            for (int k = 0; k < examplesNumber; k++)
+            {
+                for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
                 {
                     for (int i = 0; i < vectorSize; i++)
                     {
-                        // Вычисление величины изменения веса
-                        double weightChange = h * (inputVector[i] - weights[winnerIndex, i]);
-                        // Обновление веса
-                        weights[winnerIndex, i] += weightChange;
+                        weights[clusterIndex, i] = random.NextDouble();
                     }
                 }
-
-                // Обновляем скорость обучения
-                h *= decayRate;
-            } while (h > min_h);
-            SaveWeightsToFile(weights, selectedDigit);
+            }
         }
+
+        private double[] CalculateDistances(int[,] inputPixels, int exampleIndex, int maxClusters, int vectorSize)
+        {
+            double[] distances = new double[maxClusters];
+            for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
+            {
+                distances[clusterIndex] = 0.0;
+                for (int i = 0; i < vectorSize; i++)
+                {
+                    double diff = weights[clusterIndex, i] - inputPixels[exampleIndex, i];
+                    distances[clusterIndex] += diff * diff;
+                }
+            }
+            return distances;
+        }
+
+        private int FindWinner(double[] distances)
+        {
+            double minDistance = distances[0];
+            int winnerIndex = 0;
+            for (int i = 1; i < distances.Length; i++)
+            {
+                if (distances[i] < minDistance)
+                {
+                    minDistance = distances[i];
+                    winnerIndex = i;
+                }
+            }
+            return winnerIndex;
+        }
+
+        private void UpdateWeights(int winnerIndex, double h, int[,] inputPixels, int exampleIndex, int vectorSize)
+        {
+            for (int i = 0; i < vectorSize; i++)
+            {
+                weights[winnerIndex, i] += h * (inputPixels[exampleIndex, i] - weights[winnerIndex, i]);
+            }
+        }
+
+        private double UpdateLearningRate(double h, double decayRate)
+        {
+            return h * decayRate;
+        }
+        //Метод обучения из метода ДС, но собранный воедино в один метод (гладкие кластеры)
+        //public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters, string selectedDigit)
+        //{
+        //    int vectorSize = inputPixels.GetLength(1); // Размерность вектора (количество пикселей)
+        //    int examplesNumber = inputPixels.GetLength(0);
+
+        //    // Инициализация массивов весов и расстояний
+        //    weights = new double[maxClusters, vectorSize];
+        //    double[] distances = new double[maxClusters];
+
+        //    // Инициализация весов случайными значениями
+        //    Random random = new Random();
+        //    Random[] r = new Random[examplesNumber];
+        //    int randomIndex = random.Next(0, inputPixels.GetLength(0));
+        //    for (int k = 0; k < examplesNumber; k++) {
+        //        r[k] = new Random();
+        //        for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
+        //        {
+        //            for (int i = 0; i < vectorSize; i++)
+        //            {
+        //                weights[clusterIndex, i] = r[k].NextDouble();
+        //            }
+        //        }
+        //    }
+
+        //    // Обучение
+        //    do
+        //    {
+        //        for (int exampleIndex = 0; exampleIndex < examplesNumber; exampleIndex++)
+        //        {
+        //            // Вычисление Евклидова расстояния от каждого нейрона до текущего входного вектора
+        //            for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
+        //            {
+        //                distances[clusterIndex] = 0.0;
+        //                for (int i = 0; i < vectorSize; i++)
+        //                {
+        //                    double diff = weights[clusterIndex, i] - inputPixels[exampleIndex, i];
+        //                    distances[clusterIndex] += diff * diff;
+        //                }
+        //            }
+
+        //            // Поиск нейрона с минимальным расстоянием
+        //            double minDistance = distances[0];
+        //            int winnerIndex = 0;
+        //            for (int i = 1; i < maxClusters; i++)
+        //            {
+        //                if (distances[i] < minDistance)
+        //                {
+        //                    minDistance = distances[i];
+        //                    winnerIndex = i;
+        //                }
+        //            }
+
+        //            // Обновление весов нейрона-победителя
+        //            for (int i = 0; i < vectorSize; i++)
+        //            {
+        //                weights[winnerIndex, i] += h * (inputPixels[exampleIndex, i] - weights[winnerIndex, i]);
+        //            }
+        //        }
+
+        //        // Обновление скорости обучения
+        //        h *= decayRate;
+        //    } while (h > min_h);
+
+        //    // Сохранение весов в файл
+        //    SaveWeightsToFile(weights, selectedDigit);
+        //}
+
+        //public void Train(int[,] inputPixels, double decayRate, double min_h, double h, int maxClusters, string selectedDigit)
+        //{
+        //    int vectorSize = inputPixels.GetLength(1); // Размерность вектора (количество пикселей)
+        //    weights = new double[maxClusters, vectorSize]; // Массив весов
+        //    int examplesNumber = inputPixels.GetLength(0);
+        //    //Инициализация весов
+        //    Random random = new Random();
+        //    for (int clusterIndex = 0; clusterIndex < maxClusters; clusterIndex++)
+        //    {
+        //        int randomIndex = random.Next(0, inputPixels.GetLength(0));
+        //        for (int i = 0; i < vectorSize; i++)
+        //        {
+        //            weights[clusterIndex, i] = random.NextDouble();
+        //        }
+        //    }
+
+        //    double neighborhoodRadius = maxClusters / 2.0;  // Начальный радиус соседства
+
+        //    //ПОИСК НЕЙРОНА-ПОБЕДИТЕЛЯ
+        //    // Поиск нейрона-победителя и обновление весов
+        //    do
+        //    {
+        //        int randomIndex = random.Next(0, inputPixels.GetLength(0));
+        //        double[] inputVector = new double[vectorSize];
+        //        for (int i = 0; i < vectorSize; i++)
+        //        {
+        //            inputVector[i] = inputPixels[randomIndex, i];
+        //        }
+        //        int winnerIndex = MinimumDistanceIndex(inputVector, maxClusters);
+
+        //        if (winnerIndex != -1)
+        //        {
+        //            for (int j = 0; j < maxClusters; j++)
+        //            {
+        //                double influence = CalculateInfluence(j, winnerIndex, maxClusters, neighborhoodRadius);
+        //                for (int i = 0; i < vectorSize; i++)
+        //                {
+        //                    double weightChange = h * influence* (inputVector[i] - weights[j, i]);
+        //                    weights[j, i] += weightChange;
+        //                }
+        //            }
+        //        }
+
+        //        // Обновляем скорость обучения и радиус соседства
+        //        h *= decayRate;
+        //        neighborhoodRadius *= decayRate;  // Постепенно уменьшаем радиус
+        //    } while (h > min_h);
+
+        //    SaveWeightsToFile(weights, selectedDigit);
+        //}
 
 
 
@@ -148,7 +403,7 @@ namespace MNIST_neuralnetwork
                     //writer.Write(DateTime.Now + "\n");
                     for (int j = 0; j < weights.GetLength(1); j++)
                     {
-                        writer.Write(Math.Round(weights[i, j], 2) + " ");
+                        writer.Write(Math.Round(weights[i, j],5) + " ");
                     }
                     writer.WriteLine();
                 }
@@ -225,10 +480,11 @@ namespace MNIST_neuralnetwork
             }
             return weights_clust;
         }
-
+        
+        //Метод присваивания класса(метки) тестовым изображениям путем расчета евклидового расстояния 
         public int[] TestKohonenNetwork(int[,] testImages)
         {
-            int numClusters = 10;
+            int numClusters = 20;
             int numDigits = 10;
             double[] distances = new double[numClusters * numDigits];
             int[] recognitionResults = new int[testImages.GetLength(0)];
@@ -243,7 +499,7 @@ namespace MNIST_neuralnetwork
                 {
                     for (int clusterIndex = 0; clusterIndex < numClusters; clusterIndex++)
                     {
-                        string weightsFileName = $"weights_{digit}_{clusterIndex}.txt";
+                        string weightsFileName = $"weights_{digit}_{clusterIndex}_Test.txt";
                         string[] lines = File.ReadAllLines(weightsFileName);
                         double[] weights = new double[784];
                         string[] weightsString = lines[0].Split(' '); // Разделение строки на отдельные числа
@@ -280,8 +536,6 @@ namespace MNIST_neuralnetwork
             string file_Result = $"Recognition_Result_{DateTime.Now.Hour}_{DateTime.Now.Minute}.txt";
             using (StreamWriter writer = new StreamWriter(file_Result))
             {
-                
-
                 // Сравниваем результаты с метками изображений
                 for (int i = 0; i < testImages.Length; i++)
                 {
@@ -318,31 +572,72 @@ namespace MNIST_neuralnetwork
         }
 
         //Метод для просмотра кластера в виде шестнадцатиричных цифр в 28 столбцов и 28 строки
-        public void FormatWeightsFile(string inputFilePath, string outputFilePath)
+       
+
+        //Метод для записи кластеров Дины Сергеевны в массив и для дальнейшей проверки методов тестирования на них
+        public  void FormatClusters(string inputDirectory, string outputDirectory)
         {
-            // Чтение всех чисел из файла
-            string allNumbers = File.ReadAllText(inputFilePath);
-            string[] numbers = allNumbers.Split(' ');
-
-            // Создание нового файла с форматированными числами
-            using (StreamWriter writer = new StreamWriter(outputFilePath))
+            for (int digit = 0; digit <= 9; digit++)
             {
-                for (int i = 0; i < 28; i++)
-                {
-                    for (int j = 0; j < 28; j++)
-                    {
-                        // Перевод числа в шестнадцатеричную систему счисления и форматирование в виде двух цифр
-                        string hexNumber = int.Parse(numbers[i * 28 + j]).ToString("X2");
+                string inputFileName = Path.Combine(inputDirectory, $"BigCluster{digit}.txt");
+                string[] clusterWeights = File.ReadAllLines(inputFileName);
 
-                        // Запись числа в файл с пробелом в качестве разделителя
-                        writer.Write(hexNumber + " ");
+                for (int clusterIndex = 0; clusterIndex < 20; clusterIndex++)
+                {
+                    string outputFileName = Path.Combine(outputDirectory, $"weights_{digit}_{clusterIndex}_Test.txt");
+                    using (StreamWriter writer = new StreamWriter(outputFileName))
+                    {
+                        for (int weightIndex = clusterIndex * 784; weightIndex < (clusterIndex + 1) * 784; weightIndex++)
+                        {
+                            writer.Write(clusterWeights[weightIndex] + " ");
+                        }
                     }
-                    // Переход на новую строку после записи 28 чисел
+                }
+            }
+        }
+
+        public void GenerateConfusionMatrix(DigitImage[] testImages, int[,] test, string outputFileName)
+        {
+            int[] recognitionResults = TestKohonenNetwork(test); // Получаем результаты распознавания
+            int[,] confusionMatrix = new int[10, 10]; // Матрица ошибок для 10 цифр
+
+            // Инициализируем матрицу
+            for (int i = 0; i < confusionMatrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < confusionMatrix.GetLength(1); j++)
+                {
+                    confusionMatrix[i, j] = 0;
+                }
+            }
+
+            // Заполняем матрицу
+            for (int i = 0; i < testImages.Length; i++)
+            {
+                int trueLabel = testImages[i].label; // Истинная метка
+                int predictedLabel = recognitionResults[i]; // Предсказанная метка
+                confusionMatrix[trueLabel, predictedLabel]++;
+            }
+
+            // Сохраняем результаты в файл
+            using (StreamWriter writer = new StreamWriter(outputFileName))
+            {
+                writer.WriteLine("Сводные результаты распознавания нейронной сети Кохонена");
+                writer.WriteLine(" \t0\t1\t2\t3\t4\t5\t6\t7\t8\t9");
+                for (int i = 0; i < 10; i++)
+                {
+                    writer.Write(i + "\t");
+                    for (int j = 0; j < 10; j++)
+                    {
+                        writer.Write(confusionMatrix[i, j] + "\t");
+                    }
                     writer.WriteLine();
                 }
             }
         }
+
     }
+
+}
     // Метод для классификации тестовых изображений
     //public int[] ClassifyTestImages(int[,] testImages, double[,] clusterWeights, RichTextBox RtxtDebugOutput, PictureBox[]pb)
     //{
@@ -465,6 +760,5 @@ namespace MNIST_neuralnetwork
     //}
 
 
-}
 
 
