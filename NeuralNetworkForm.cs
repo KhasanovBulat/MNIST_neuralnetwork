@@ -15,7 +15,7 @@ namespace MNIST_neuralnetwork
         int[,] temp_test = new int[10000, 28 * 28]; // Создаем временный массив для хранения пикселей тестовой выборки
         public int currentIndex = 0; // индекс текущего к показу изображения
         public KohonenNetwork kohonenNet = new KohonenNetwork();
-        public HopfieldNetwork hopfieldNet = new HopfieldNetwork(100,784);
+        public HopfieldNetwork hopfieldNet = new HopfieldNetwork(50,784);
         MNIST mnist_train = new MNIST(20, 10000, 784);
         MNIST mnist_test = new MNIST(20, 10000, 784);
         List<Bitmap> digits = new List<Bitmap>(); // список, в котором цифры хранятся по коллекциям в формате Bitmap
@@ -291,12 +291,14 @@ namespace MNIST_neuralnetwork
 
         private void HopfieldNetButton_Click(object sender, EventArgs e)
         {
-            int[,] preprocessedData = hopfieldNet.PreprocessData(temp_train);
-            hopfieldNet.CreateW(preprocessedData);
-            int[,] processedTestData = hopfieldNet.PreprocessData(temp_test);   
-            int[,] recoverd = hopfieldNet.Recall(processedTestData, 200);
-            hopfieldNet.DisplayAndSaveImages(recoverd,"HopfieldTestImg");
-            //double accuracies = hopfieldNet.CompareRecoveryAccuracy(proccesed)
+            int[,] preprocessedTrainData = hopfieldNet.PreprocessData(temp_train);
+            hopfieldNet.CreateW(preprocessedTrainData);
+            
+            int[,] processedTestData = hopfieldNet.PreprocessData(temp_test);
+            
+            int[,] recovered_Test = hopfieldNet.Recall(processedTestData, 50);
+            hopfieldNet.DisplayAndSaveImages(recovered_Test,"HopfieldTestImg");
+            double[] accuracies = hopfieldNet.CompareRecoveryAccuracy(processedTestData, recovered_Test);
 
         }
     }

@@ -13,11 +13,12 @@ namespace MNIST_neuralnetwork
 {
     public class HopfieldNetwork
     {
-        public int[,] weights; //матрица весовых коэффициентов 
+        
         public int[,] preprocessedData; //массив пикселей образцов в биполярном формате
         public int vectorSize;
-        public int numTrainingPatterns = 50; //количество образцов из обучающей выборки, которое я отдаю сети на запоминание
-        public int thr = 100;
+        public int numTrainingPatterns = 70; //количество образцов из обучающей выборки, которое  отдаём сети на запоминание
+        public int thr = 155;
+        public int[,] weights; //матрица весовых коэффициентов 
 
         public HopfieldNetwork(int numTrainingPatterns, int vectorSize)
         {
@@ -49,100 +50,122 @@ namespace MNIST_neuralnetwork
 
             return preprocessedData;
         }
+       
 
+     
         //Метод для вычисления матрицы весовых коэффициентов на основе предобработанных обучающих образцов
-        public void CreateW(int[,] patterns)
+        public int[,] CreateW(int[,] patterns)
         {
+            // Очистка матрицы весов перед её заполнением
+            weights = new int[vectorSize, vectorSize];
+
             for (int k = 0; k < numTrainingPatterns; k++)
             {
                 for (int i = 0; i < vectorSize; i++)
                 {
                     for (int j = 0; j < vectorSize; j++)
-                    { 
-                            weights[i, j] += patterns[k, i] * patterns[k, j];
+                    {
+                        weights[i, j] += patterns[k, i] * patterns[k, j];
                     }
                 }
+                
             }
             for (int i = 0; i < vectorSize; i++)
             {
-                weights[i, i] = 0;
+                weights[i, i] = 0; // Обнуление диагональные элементов
             }
+
+            //for (int i = 0; i < vectorSize; i++)
+            //{
+            //    for (int j = 0; j < vectorSize; j++)
+            //    {
+            //        weights[i, j] *= 1.0 / vectorSize;  //  деление выполняется как операция с плавающей точкой
+            //    }
+            //}
+
+            return weights;  // Возвращаем матрицу весов
         }
+        
 
-
-        //Метод для расчета взвешенной суммы нейрона и асинхронного обновления его состояния в соответсвии с пороговой функцией активации
-        public int[] UpdateAsync(int[] yVec, int time = 200)
+        //Метод для расчета взвешенной суммы входов и асинхронного обновления его состояния в соответсвии с пороговой функцией активации
+        
+        public int[] UpdateNew(int[] yVec, int time, int[,] weights)
         {
-            int[] updatedVec = new int[vectorSize];
-            yVec.CopyTo(updatedVec, 0);
-            Random random = new Random();
+            int[] sum = new int[vectorSize];  // измените тип на double[]
 
-            for (int t = 0; t < time; t++)
-            {
-                // Создание массива индексов и его перетасовка
-                int[] indices = new int[vectorSize];
+            Random random = new Random();
+            
                 for (int i = 0; i < vectorSize; i++)
                 {
-                    indices[i] = i;
-                }
-                Shuffle(indices, random);
-
-                // Асинхронное обновление каждого нейрона
-                for (int idx = 0; idx < vectorSize; idx++)
-                {
-                    int i = indices[idx];
-                    int sum = 0;
+                  // sum[i] = 0;  // Обнулите сумму для каждого нейрона перед расчетом
                     for (int j = 0; j < vectorSize; j++)
                     {
-                        sum += weights[i, j] * updatedVec[j];
+                        sum[i] += weights[i, j] * yVec[i];
+                    }
+                }
+            
+                for (int i = 0; i < vectorSize; i++)
+                {
+                // Пороговая функция активации 
+                if (sum[i] >= 0)
+                    sum[i] = 1;
+                else sum[i] = -1;
+                     //sum[i] >= 0 ? 1 : -1;  // обновите состояние нейрона
+                }
+
+            return sum; // возвращаем обновленный вектор состояний
+        }
+
+        public int[] UpdateNew2(int[] yVec, int maxIterations, int[,] weights)
+        {
+            int vectorSize = yVec.Length;
+            int[] updatedVec = new int[vectorSize];
+            yVec.CopyTo(updatedVec, 0);
+
+            Random random = new Random();
+            int iterations = 0;
+            bool isStable;
+
+            do
+            {
+                isStable = true;
+
+                for (int i = 0; i < vectorSize; i++)
+                {
+                    int idx = random.Next(vectorSize);
+                    int sum = 0;
+
+                    for (int j = 0; j < vectorSize; j++)
+                    {
+                        if (idx != j)
+                        {
+                            sum += weights[idx, j] * updatedVec[i];
+                        }
                     }
 
-                    if (sum > 0)
-                        updatedVec[i] = 1;
-                    else if (sum < 0)
-                        updatedVec[i] = -1;
+                    int newValue = sum >= 0 ? 1 : -1;
+
+                    if (newValue != updatedVec[idx])
+                    {
+                        isStable = false;
+                        updatedVec[idx] = newValue;
+                    }
                 }
-            }
+
+                iterations++;
+            } while (!isStable && iterations < maxIterations);
 
             return updatedVec;
         }
-        private void Shuffle(int[] array, Random rng)
-        {
-            int n = array.Length;
-            while (n > 1)
-            {
-                int k = rng.Next(n--);
-                int temp = array[n];
-                array[n] = array[k];
-                array[k] = temp;
-            }
-        }
-        public int[] Update(int[] yVec, int time = 500)
-        {
-            int[] sum = new int[vectorSize];
 
-            Random random = new Random();
-            for (int t = 0; t < time; t++)
-            {
-                int i = random.Next(vectorSize);
-                
-                    for (int j = 0; j < vectorSize; j++)
-                    {
-                        sum[i] += weights[i, j] * yVec[j];
-                    }
 
-                    if (sum[i] >= 0)
-                        sum[i] = 1;
-                    else if (sum[i] < 0)
-                        sum[i] = -1;
-                
-            }
-            return sum;
-        }
-        //Метод для восстановления 10 000 тестовых образцов из MNIST длиной 784 пикселя
-        public int[,] Recall(int[,] testPatterns, int time = 200)
+
+
+        // Метод для восстановления тестовых образцов
+        public int[,] Recall(int[,] testPatterns, int time)
         {
             int numTests = testPatterns.GetLength(0); // Получение количества тестовых образцов
+            int vectorSize = testPatterns.GetLength(1);
             int[,] recoveredPatterns = new int[numTests, vectorSize];
 
             for (int p = 0; p < numTests; p++)
@@ -153,7 +176,7 @@ namespace MNIST_neuralnetwork
                     testPattern[i] = testPatterns[p, i];
                 }
 
-                int[] updatedPattern = Update(testPattern, time); 
+                int[] updatedPattern = UpdateNew(testPattern, time, weights);
                 for (int i = 0; i < vectorSize; i++)
                 {
                     recoveredPatterns[p, i] = updatedPattern[i];
@@ -162,10 +185,12 @@ namespace MNIST_neuralnetwork
 
             return recoveredPatterns;
         }
+
         public void DisplayAndSaveImages(int[,] pixels, string baseFilename)
         {
             int numImages = pixels.GetLength(0);
             int width = (int)Math.Sqrt(pixels.GetLength(1));  // Предполагаем, что изображение квадратное
+            int scale = 10;  // Масштабирование в 10 раз
 
             for (int img = 0; img < numImages; img++)
             {
@@ -180,14 +205,17 @@ namespace MNIST_neuralnetwork
                     }
                 }
 
+                // Масштабирование изображения
+                Bitmap scaledBitmap = new Bitmap(bitmap, new Size(width * scale, width * scale));
+
                 // Сохранение изображения с уникальным именем
-                string timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                string filename = $"{baseFilename}_{img}_{timestamp}.png";
-                SaveImage(bitmap, filename);
+                string timestamp = DateTime.Now.ToString("dd_MM_yyyy_HH_mm");
+                string filename = $"{baseFilename}_{img}_{timestamp}.jpg";
+                SaveImage(scaledBitmap, filename, ImageFormat.Jpeg);
             }
         }
 
-        public void SaveImage(Bitmap bitmap, string filename)
+        public void SaveImage(Bitmap bitmap, string filename, ImageFormat format)
         {
             string folderPath = Path.GetDirectoryName(Application.ExecutablePath);
             string imagesFolderPath = Path.Combine(folderPath, "RecoveredImages");
@@ -197,7 +225,7 @@ namespace MNIST_neuralnetwork
             }
 
             string filePath = Path.Combine(imagesFolderPath, filename);
-            bitmap.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+            bitmap.Save(filePath, format);
         }
 
         public double[] CompareRecoveryAccuracy(int[,] originalData, int[,] recoveredData)
