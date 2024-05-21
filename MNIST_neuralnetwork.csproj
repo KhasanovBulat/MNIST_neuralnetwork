@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DigitImage.cs" />
+    <Compile Include="HierarchicalNetwork.cs" />
     <Compile Include="HopfieldNetwork.cs" />
     <Compile Include="InformationTable.cs">
       <SubType>Form</SubType>

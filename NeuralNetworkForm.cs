@@ -16,6 +16,7 @@ namespace MNIST_neuralnetwork
         public int currentIndex = 0; // индекс текущего к показу изображения
         public KohonenNetwork kohonenNet = new KohonenNetwork();
         public HopfieldNetwork hopfieldNet = new HopfieldNetwork(50,784);
+        public HierarchicalNetwork hierarchicalNet = new HierarchicalNetwork();
         MNIST mnist_train = new MNIST(20, 10000, 784);
         MNIST mnist_test = new MNIST(20, 10000, 784);
         List<Bitmap> digits = new List<Bitmap>(); // список, в котором цифры хранятся по коллекциям в формате Bitmap
@@ -295,10 +296,35 @@ namespace MNIST_neuralnetwork
             hopfieldNet.CreateW(preprocessedTrainData);
             
             int[,] processedTestData = hopfieldNet.PreprocessData(temp_test);
-            
             int[,] recovered_Test = hopfieldNet.Recall(processedTestData, 50);
             hopfieldNet.DisplayAndSaveImages(recovered_Test,"HopfieldTestImg");
-            double[] accuracies = hopfieldNet.CompareRecoveryAccuracy(processedTestData, recovered_Test);
+            //hopfieldNet.CompareAndSaveFirstSample(processedTestData, recovered_Test);
+            double[] accuracies = hopfieldNet.ComputeClassAccuracyWithConfusionMatrix(processedTestData, recovered_Test, testImages);
+            //int[,] confusionMatrix = hopfieldNet.ComputeConfusionMatrix(processedTestData, recovered_Test, testImages);
+            //hopfieldNet.CompareAndSaveFirstSample(processedTestData,recovered_Test);
+            //double[] accuracies1 = hopfieldNet.CompareRecoveryAccuracy(processedTestData, recovered_Test);
+
+
+        }
+
+        private void kryptonButton1_Click(object sender, EventArgs e)
+        {
+            // Путь к файлам кластеров
+            string[] filePaths = new string[10];
+            for (int i = 0; i < 10; i++)
+            {
+                filePaths[i] = $"BigCluster{i}.txt";
+            }
+            double[,] clustersFromFile = hierarchicalNet.LoadClusters(filePaths);
+            int[,] bipolarClusters = hierarchicalNet.PreprocessToBipolar(clustersFromFile);
+            HopfieldNetwork hopfieldForHierarchical = new HopfieldNetwork(200, 784);
+            hopfieldForHierarchical.CreateW(bipolarClusters);
+            int[,] processedTestData = hopfieldNet.PreprocessData(temp_test);
+            int[,] recoveredTests = hopfieldForHierarchical.Recall(processedTestData, 50);
+            int[] predictedLabels = hierarchicalNet.ClassifySamples(recoveredTests, bipolarClusters);
+            double[] accuraciesForHierarchical = hierarchicalNet.Evaluate(recoveredTests, testImages, bipolarClusters, predictedLabels);
+            hopfieldNet.DisplayAndSaveImages(recoveredTests, "HierarchicalNetRecover");
+
 
         }
     }

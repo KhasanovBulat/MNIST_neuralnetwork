@@ -32,11 +32,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NeuralNetworkForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.HopfieldNetButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.TestSetButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.InfoButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DetectButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.DownlButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.RtxtDebugOutput = new System.Windows.Forms.RichTextBox();
             this.ClusterCountChoice = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.ClustersCountChoiceLabel = new System.Windows.Forms.Label();
             this.NextDigit = new System.Windows.Forms.Button();
@@ -46,7 +46,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.HopfieldNetButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.kryptonButton1 = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -86,6 +86,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.kryptonButton1);
             this.splitContainer2.Panel1.Controls.Add(this.HopfieldNetButton);
             this.splitContainer2.Panel1.Controls.Add(this.TestSetButton);
             this.splitContainer2.Panel1.Controls.Add(this.InfoButton);
@@ -94,7 +95,6 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.RtxtDebugOutput);
             this.splitContainer2.Panel2.Controls.Add(this.ClusterCountChoice);
             this.splitContainer2.Panel2.Controls.Add(this.ClustersCountChoiceLabel);
             this.splitContainer2.Panel2.Controls.Add(this.NextDigit);
@@ -104,6 +104,15 @@
             this.splitContainer2.Size = new System.Drawing.Size(491, 637);
             this.splitContainer2.SplitterDistance = 105;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // HopfieldNetButton
+            // 
+            this.HopfieldNetButton.Location = new System.Drawing.Point(12, 59);
+            this.HopfieldNetButton.Name = "HopfieldNetButton";
+            this.HopfieldNetButton.Size = new System.Drawing.Size(129, 32);
+            this.HopfieldNetButton.TabIndex = 4;
+            this.HopfieldNetButton.Values.Text = "НС Хопфилда";
+            this.HopfieldNetButton.Click += new System.EventHandler(this.HopfieldNetButton_Click);
             // 
             // TestSetButton
             // 
@@ -141,14 +150,6 @@
             this.DownlButton.Values.Text = "Загрузить";
             this.DownlButton.Click += new System.EventHandler(this.DownlButton_Click);
             // 
-            // RtxtDebugOutput
-            // 
-            this.RtxtDebugOutput.Location = new System.Drawing.Point(348, 47);
-            this.RtxtDebugOutput.Name = "RtxtDebugOutput";
-            this.RtxtDebugOutput.Size = new System.Drawing.Size(134, 262);
-            this.RtxtDebugOutput.TabIndex = 9;
-            this.RtxtDebugOutput.Text = "";
-            // 
             // ClusterCountChoice
             // 
             this.ClusterCountChoice.DropDownWidth = 164;
@@ -171,7 +172,7 @@
             "18",
             "19",
             "20"});
-            this.ClusterCountChoice.Location = new System.Drawing.Point(229, 361);
+            this.ClusterCountChoice.Location = new System.Drawing.Point(262, 361);
             this.ClusterCountChoice.Name = "ClusterCountChoice";
             this.ClusterCountChoice.Size = new System.Drawing.Size(164, 25);
             this.ClusterCountChoice.TabIndex = 8;
@@ -181,7 +182,7 @@
             // ClustersCountChoiceLabel
             // 
             this.ClustersCountChoiceLabel.AutoSize = true;
-            this.ClustersCountChoiceLabel.Location = new System.Drawing.Point(233, 328);
+            this.ClustersCountChoiceLabel.Location = new System.Drawing.Point(266, 328);
             this.ClustersCountChoiceLabel.Name = "ClustersCountChoiceLabel";
             this.ClustersCountChoiceLabel.Size = new System.Drawing.Size(160, 16);
             this.ClustersCountChoiceLabel.TabIndex = 5;
@@ -190,7 +191,7 @@
             // NextDigit
             // 
             this.NextDigit.Image = ((System.Drawing.Image)(resources.GetObject("NextDigit.Image")));
-            this.NextDigit.Location = new System.Drawing.Point(97, 361);
+            this.NextDigit.Location = new System.Drawing.Point(113, 361);
             this.NextDigit.Name = "NextDigit";
             this.NextDigit.Size = new System.Drawing.Size(80, 32);
             this.NextDigit.TabIndex = 4;
@@ -200,7 +201,7 @@
             // PrevDigit
             // 
             this.PrevDigit.Image = ((System.Drawing.Image)(resources.GetObject("PrevDigit.Image")));
-            this.PrevDigit.Location = new System.Drawing.Point(12, 361);
+            this.PrevDigit.Location = new System.Drawing.Point(28, 361);
             this.PrevDigit.Name = "PrevDigit";
             this.PrevDigit.Size = new System.Drawing.Size(79, 32);
             this.PrevDigit.TabIndex = 3;
@@ -222,7 +223,7 @@
             "8",
             "9",
             "All images"});
-            this.DropDownList.Location = new System.Drawing.Point(13, 328);
+            this.DropDownList.Location = new System.Drawing.Point(29, 330);
             this.DropDownList.Name = "DropDownList";
             this.DropDownList.Size = new System.Drawing.Size(164, 25);
             this.DropDownList.TabIndex = 2;
@@ -231,7 +232,7 @@
             // 
             // MNIST_PictureBox
             // 
-            this.MNIST_PictureBox.Location = new System.Drawing.Point(13, 47);
+            this.MNIST_PictureBox.Location = new System.Drawing.Point(85, 36);
             this.MNIST_PictureBox.Name = "MNIST_PictureBox";
             this.MNIST_PictureBox.Size = new System.Drawing.Size(301, 262);
             this.MNIST_PictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -253,14 +254,14 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // HopfieldNetButton
+            // kryptonButton1
             // 
-            this.HopfieldNetButton.Location = new System.Drawing.Point(12, 59);
-            this.HopfieldNetButton.Name = "HopfieldNetButton";
-            this.HopfieldNetButton.Size = new System.Drawing.Size(129, 32);
-            this.HopfieldNetButton.TabIndex = 4;
-            this.HopfieldNetButton.Values.Text = "НС Хопфилда";
-            this.HopfieldNetButton.Click += new System.EventHandler(this.HopfieldNetButton_Click);
+            this.kryptonButton1.Location = new System.Drawing.Point(159, 59);
+            this.kryptonButton1.Name = "kryptonButton1";
+            this.kryptonButton1.Size = new System.Drawing.Size(250, 32);
+            this.kryptonButton1.TabIndex = 5;
+            this.kryptonButton1.Values.Text = "Построить иерархическую НС";
+            this.kryptonButton1.Click += new System.EventHandler(this.kryptonButton1_Click);
             // 
             // NeuralNetworkForm
             // 
@@ -305,8 +306,8 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private ComponentFactory.Krypton.Toolkit.KryptonButton TestSetButton;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.RichTextBox RtxtDebugOutput;
         private ComponentFactory.Krypton.Toolkit.KryptonButton HopfieldNetButton;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton kryptonButton1;
     }
 }
 
